@@ -1,6 +1,6 @@
 {
   "name": "@hilosiva/rola",
-  "version": "0.0.1",
+  "version": "0.0.2-beta.0",
   "description": "Rola is JavaScript library for managing IntersectionObserver and scroll-based animations.",
   "type": "module",
   "main": "dist/index.js",
@@ -12,17 +12,22 @@
     "lint": "biome check .",
     "lint:fix": "biome check . --write",
     "format": "biome format .",
-    "format:write": "biome format . --write"
+    "format:write": "biome format . --write",
+    "version:patch": "npm version patch --force --no-git-tag-version",
+    "version:minor": "npm version minor --force --no-git-tag-version",
+    "version:major": "npm version major --force --no-git-tag-version",
+    "publish:main": "npm publish",
+    "publish:beta": "npm publish --beta dev"
   },
-  "style": "rola.css",
+  "style": "dist/rola.css",
   "exports": {
     ".": {
-      "style": "./rola.css",
+      "style": "./dist/rola.css",
       "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs",
       "import": "./dist/index.js"
     },
-    "./rola.css": "./rola.css"
+    "./dist/rola.css": "./dist/rola.css"
   },
   "publishConfig": {
     "provenance": false,
@@ -30,15 +35,20 @@
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",
-        "style": "./rola.css",
+        "style": "./dist/rola.css",
         "require": "./dist/index.cjs",
         "import": "./dist/index.js"
       },
-      "./rola.css": "./rola.css"
+      "./rola.css": "./dist/rola.css"
     }
   },
-  "files": ["dist", "rola.css"],
-  "keywords": ["scrollObserver", "Scrub"],
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "scrollObserver",
+    "Scrub"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/hilosiva/rola"
@@ -46,7 +56,7 @@
   "bugs": {
     "url": "https://github.com/hilosiva/rola/issues"
   },
-  "homepage": "https://shibajuku.net/demo/rola/",
+  "homepage": "https://github.com/hilosiva/rola",
   "author": "Shibata Hironori",
   "license": "MIT",
   "devDependencies": {

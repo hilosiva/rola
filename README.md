@@ -11,7 +11,7 @@ Rola は スクロールによる要素の状態を HTML の属性や CSS カス
 ### CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.0.1/dist/main.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.0.1/dist/rola.min.js" defer></script>
 ```
 
 ### NPM
@@ -24,7 +24,9 @@ npm i -D @hilosiva/rola
 import Rola from "@hilosiva/rola";
 ```
 
-## 使い方
+## セットアップ
+
+### 基本
 
 スクロールアニメーションをトリガーしたい HTML の要素をセレクターとして、Rola に要素の監視を登録します。
 
@@ -103,6 +105,47 @@ OS の「視差効果を減らす」機能に対応する場合は、`@media`　
   }
 }
 ```
+
+### Rola CSS
+
+フェードインや、スライドなどよく利用するスタイルをあらかじめ記述した rola.css も用意しています。
+
+#### バンドラーが CSS に対応している場合
+
+```javascript
+import "@hilosiva/rola/dist/rola.css";
+```
+
+#### Post CSS や Lightning CSS などで CSS をビルドする場合
+
+```css
+@import "@hilosiva/rola";
+```
+
+#### CDN
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.0.1/dist/rola.css" />
+```
+
+この rola.css を使う場合は、ターゲット要素に `data-rola-transition` 属性を使って属性値に `fade-in` などを指定するだけでアニメーション可能です。
+
+```html
+<div data-rola-trigger data-rola-transition="fade-in">...</div>
+```
+
+利用できる値は以下のとおりです。
+
+- `fade-in`
+- `blur-in`
+- `slide-up-in`
+
+なお、デュレーションやイージングなどは、`transition` プロパティで上書きしてもいいですが、カスタムプロパティを使って変更できるようになっています。
+
+- `--rola-duration` : `transition-duration` の値（デフォルト: `0.6s`）
+- `--rola-easing` : `transition-timing-function` の値 （デフォルト： `cubic-bezier(0.25, 1, 0.5, 1)`）
+
+### ターゲット要素の指定
 
 トリガー要素に、`data-rola-target` 属性を指定すると、`data-rola-inview`属性を付与する要素を変更できます。
 これによりビューポート内に表示されたかを監視するトリガー要素と、実際にアニメーションを行うターゲットとなる要素に分けることができます。
@@ -215,6 +258,15 @@ new Rola("[data-rola-trigger]", { once: false, scrub: true });
   <img src="pizza.jpg" class="h-full w-full object-cover" alt="" decoding="async" loading="lazy" data-effect="parallax" />
 </figure>
 ```
+
+rola.css 　を使っている場合は、ターゲット要素に `data-rola-animation` 属性を使って `fade-in` などの属性値を指定することでアニメーションできます。
+利用できる値は以下のとおりです。
+
+- `fade-in`
+- `fade-out`
+- `scale-in`
+- `scale-out`
+- `parallax`
 
 ## コールバック
 

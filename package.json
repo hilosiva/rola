@@ -1,6 +1,6 @@
 {
   "name": "@hilosiva/rola",
-  "version": "0.0.2-beta.0",
+  "version": "0.0.2",
   "description": "Rola is JavaScript library for managing IntersectionObserver and scroll-based animations.",
   "type": "module",
   "main": "dist/index.js",
@@ -13,9 +13,10 @@
     "lint:fix": "biome check . --write",
     "format": "biome format .",
     "format:write": "biome format . --write",
-    "version:patch": "npm version patch --force --no-git-tag-version",
-    "version:minor": "npm version minor --force --no-git-tag-version",
-    "version:major": "npm version major --force --no-git-tag-version",
+    "version:patch": "npm version patch --force --no-git-tag-version && pnpm readme",
+    "version:minor": "npm version minor --force --no-git-tag-version && pnpm readme",
+    "version:major": "npm version major --force --no-git-tag-version && pnpm readme",
+    "readme": "node ./scripts/update.js",
     "publish:main": "npm publish",
     "publish:beta": "npm publish --tag beta"
   },

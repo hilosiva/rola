@@ -1,0 +1,58 @@
+{
+  "name": "@hilosiva/rola",
+  "version": "0.0.1",
+  "description": "Rola is JavaScript library for managing IntersectionObserver and scroll-based animations.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "test": "vitest",
+    "lint": "biome check .",
+    "lint:fix": "biome check . --write",
+    "format": "biome format .",
+    "format:write": "biome format . --write"
+  },
+  "style": "rola.css",
+  "exports": {
+    ".": {
+      "style": "./rola.css",
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    },
+    "./rola.css": "./rola.css"
+  },
+  "publishConfig": {
+    "provenance": false,
+    "access": "public",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "style": "./rola.css",
+        "require": "./dist/index.cjs",
+        "import": "./dist/index.js"
+      },
+      "./rola.css": "./rola.css"
+    }
+  },
+  "files": ["dist", "rola.css"],
+  "keywords": ["scrollObserver", "Scrub"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hilosiva/rola"
+  },
+  "bugs": {
+    "url": "https://github.com/hilosiva/rola/issues"
+  },
+  "homepage": "https://shibajuku.net/demo/rola/",
+  "author": "Shibata Hironori",
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}

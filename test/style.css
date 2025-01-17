@@ -1,0 +1,218 @@
+@import url("../src/rola.css");
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #101010;
+  color: #fff;
+}
+
+.hero {
+  min-block-size: 500vb;
+}
+
+.intro {
+  position: sticky;
+  inset-block-start: 0;
+  perspective: 500px;
+  transform-style: preserve-3d;
+  display: block grid;
+  grid-template-areas: "hero";
+  block-size: 100vb;
+  align-items: center;
+  overflow: hidden;
+  background-image: radial-gradient(#222, #000);
+
+  & > * {
+    --rola-easing: cubic-bezier(calc(0.16 + var(--rola-velocity, 0) * 0.1), calc(1 - var(--rola-velocity, 0) * 0.2), calc(0.3 + var(--rola-velocity, 0) * 0.1), 1);
+    --rola-dynamic-duration: calc((1 + var(--rola-velocity, 0)) * var(--duration));
+    --duration: 1s;
+
+    grid-area: hero;
+    transform: translateZ(calc(var(--start) + (var(--end) - var(--start)) * var(--rola-progress)));
+
+    transition: transform var(--rola-dynamic-duration) var(--rola-easing);
+  }
+}
+
+h1 {
+  --start: 250px; /* progress が 0 の時 */
+  --end: 750px; /* progress が 1 の時 */
+  z-index: 1;
+  text-align: center;
+  color: #fff;
+  align-self: center;
+  font-size: 10rem;
+}
+
+.item {
+  background-color: #000;
+  background-image: radial-gradient(#222, #000);
+  inline-size: 640px;
+  block-size: 320px;
+
+  &:nth-child(2) {
+    --start: 150px; /* progress が 0 の時 */
+    --end: 650px; /* progress が 1 の時 */
+    justify-self: start;
+  }
+  &:nth-child(3) {
+    --start: 0px; /* progress が 0 の時 */
+    --end: 500px; /* progress が 1 の時 */
+
+    justify-self: center;
+  }
+  &:nth-child(4) {
+    --start: 100px; /* progress が 0 の時 */
+    --end: 600px; /* progress が 1 の時 */
+    justify-self: end;
+  }
+}
+
+.box {
+  display: grid;
+  place-content: center;
+  width: 300px;
+  aspect-ratio: 1 / 1;
+  background-color: #232830;
+  color: white;
+  font-size: 1.5rem;
+  margin: 0 auto;
+
+  &.left {
+    margin: 0;
+  }
+}
+
+[data-trigger] {
+  --duration: 0.6s;
+  --easing: ease-out;
+  --property: opacity;
+
+  transition: var(--duration) var(--easing);
+  transition-property: var(--property);
+}
+
+[data-rola-scrub] {
+  --rola-progress: 0;
+}
+
+[data-trigger="fadeIn"] {
+  &[data-rola-inview="false"] {
+    opacity: 0;
+  }
+  &[data-rola-inview="true"] {
+    opacity: 1;
+  }
+}
+
+[data-trigger="blurIn"] {
+  --property: opacity, filter;
+
+  &[data-rola-inview="false"] {
+    filter: blur(8px);
+    opacity: 0;
+  }
+  &[data-rola-inview="true"] {
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
+[data-trigger="slideUpIn"] {
+  --property: opacity, translate;
+
+  &[data-rola-inview="false"] {
+    translate: 0 3rem;
+    opacity: 0;
+  }
+  &[data-rola-inview="true"] {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-effect="parallax"] {
+    --range: 500px;
+    /* --translate: calc((var(--range) * -1px) + (var(--range) * 2px) * var(--rola-progress, 0)); */
+
+    translate: 0 calc((var(--rola-progress) - 0.5) * (var(--range) * var(--depth, 1)));
+    /* transition: translate 0.05s ease; */
+  }
+
+  [data-effect="translate"] {
+    /* --rola-dynamic-duration: 1s; */
+    /* --rola-dynamic-duration: calc((1 - var(--rola-velocity, 0)) * var(--duration)); */
+    /* --rola-dynamic-duration: calc((1 + var(--rola-progress) - var(--rola-prev-progress, 0)) * var(--duration)); */
+    --rola-dynamic-duration: calc((1 + var(--rola-velocity, 0)) * var(--duration));
+    --duration: 1s;
+    /* --easing: cubic-bezier(0.16, 1, 0.3, 1); */
+
+    --rola-easing: cubic-bezier(calc(0.16 + var(--rola-velocity, 0) * 0.1), calc(1 - var(--rola-velocity, 0) * 0.2), calc(0.3 + var(--rola-velocity, 0) * 0.1), 1);
+    /* --easing: ease-out; */
+    /* --easing: cubic-bezier(0.16, 1, 0.3, 1); */
+
+    --range: 500px;
+    /* --translate: calc((var(--range) * -1px) + (var(--range) * 2px) * var(--rola-progress, 0)); */
+    position: sticky;
+    /* top: 0; */
+    top: 50vh;
+    /* translate: calc(var(--rola-progress) * (50svi - 50%)) 0; */
+    /* translate: 0 calc(var(--rola-progress) * (50vb - 100%)); */
+    translate: calc(var(--rola-progress) * (100vi - 100%)) 0;
+    transition: translate var(--rola-dynamic-duration) var(--rola-easing);
+  }
+
+  [data-clip-item] {
+    clip-path: inset(calc((1 - var(--rola-progress)) * 30%));
+  }
+
+  [data-scrub="textClipIn"] {
+    color: transparent;
+    background-image: linear-gradient(90deg, #000 50%, #ccc 50%, #ccc 100%);
+    background-position: calc(100% * (1 - var(--rola-progress))) 0;
+    background-clip: text;
+    background-size: 200% 100%;
+  }
+}
+
+.photo {
+  overflow: hidden;
+  aspect-ratio: 360 / 240;
+
+  img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+}
+
+.box-container {
+  /* position: sticky;
+  top: 0vh; */
+  display: block flex;
+  column-gap: 2rem;
+  justify-content: center;
+}
+
+.box {
+  &[data-rola-animation] {
+    --rola-range-start: 0%;
+    --rola-range-end: calc(100vh - 100%);
+    --rola-duration: 1s;
+
+    &:nth-child(1) {
+      --rola-depth: 1;
+    }
+    &:nth-child(2) {
+      --rola-depth: 1.5;
+    }
+    &:nth-child(3) {
+      --rola-depth: 2;
+    }
+  }
+}

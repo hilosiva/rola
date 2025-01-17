@@ -17,7 +17,7 @@
     "version:minor": "npm version minor --force --no-git-tag-version",
     "version:major": "npm version major --force --no-git-tag-version",
     "publish:main": "npm publish",
-    "publish:beta": "npm publish --beta dev"
+    "publish:beta": "npm publish --tag beta"
   },
   "style": "dist/rola.css",
   "exports": {

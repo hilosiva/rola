@@ -11,7 +11,7 @@ Rola は スクロールによる要素の状態を HTML の属性や CSS カス
 ### CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.0.1/dist/rola.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.0.2/dist/rola.min.js" defer></script>
 ```
 
 ### NPM
@@ -125,7 +125,7 @@ import "@hilosiva/rola/dist/rola.css";
 #### CDN
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.0.1/dist/rola.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.0.2/dist/rola.css" />
 ```
 
 この rola.css を使う場合は、ターゲット要素に `data-rola-transition` 属性を使って属性値に `fade-in` などを指定するだけでアニメーション可能です。

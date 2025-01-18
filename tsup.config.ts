@@ -2,7 +2,7 @@ import { defineConfig } from "tsup";
 
 export default defineConfig([
   {
-    entry: ["src/index.ts"],
+    entry: ["packages/core/src/index.ts"],
     format: ["esm", "cjs"],
     dts: true,
     minify: true,
@@ -28,7 +28,7 @@ export default defineConfig([
 
   {
     entry: {
-      rola: "src/cdn.ts",
+      rola: "packages/core/src/cdn.ts",
     },
     format: ["iife"],
     minify: true,
@@ -53,7 +53,7 @@ export default defineConfig([
   },
   {
     entry: {
-      rola: "src/rola.css",
+      rola: "packages/core/src/rola.css",
     },
     minify: true,
     sourcemap: false,

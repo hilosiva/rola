@@ -1,5 +1,3 @@
-import Rola from "../dist/index.js";
-
 new Rola("[data-rola-trigger]", { once: false, rootMargin: "0px 0px -10%" });
 new Rola("[data-trigger2]", { once: false, rootMargin: "0px 0px 0% 0px" });
 new Rola("[data-trigger3]", { rootMargin: "0px 0px 0%", once: true });

@@ -2,7 +2,7 @@ import { RolaOptions, EntryOptions, CallbackFunction } from "./types";
 import { parsePositionAttribute, parseBoolean, parseRootAttribute, parseTarget } from "./utlis/parse";
 import { getRootMargin, normalizeRootMargin } from "./utlis/rootMargin";
 import { lerp } from "./utlis/math";
-import { version } from "../package.json";
+import { version } from "../../../package.json";
 
 /**
  * Rola - A library for managing IntersectionObserver and scroll-based animations.

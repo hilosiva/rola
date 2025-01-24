@@ -11,7 +11,7 @@ Rola は スクロールによる要素の状態を HTML の属性や CSS カス
 ### CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.0.3/dist/rola.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.1.0/dist/rola.min.js" defer></script>
 ```
 
 ### NPM
@@ -125,20 +125,21 @@ import "@hilosiva/rola/dist/rola.css";
 #### CDN
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.0.3/dist/rola.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.1.0/dist/rola.css" />
 ```
 
-この rola.css を使う場合は、ターゲット要素に `data-rola-transition` 属性を使って属性値に `fade-in` などを指定するだけでアニメーション可能です。
+この rola.css を使う場合は、ターゲット要素に `data-rola-transition` 属性を使って属性値に `fade` などを指定するだけでアニメーション可能です。
 
 ```html
-<div data-rola-trigger data-rola-transition="fade-in">...</div>
+<div data-rola-trigger data-rola-transition="fade">...</div>
 ```
 
 利用できる値は以下のとおりです。
 
-- `fade-in`
-- `blur-in`
-- `slide-up-in`
+- `fade`
+- `blur`
+- `scale`
+- `slide`
 
 なお、デュレーションやイージングなどは、`transition` プロパティで上書きしてもいいですが、カスタムプロパティを使って変更できるようになっています。
 
@@ -167,7 +168,7 @@ Rola には以下のオプションが利用できます。
 | `root`                       | IntersectionObserver の`root` プロパティで、ビューポートとなる要素を指定する（デフォルト： `null`）                                          | Element、 Document、 null、undefined |
 | `rootMargin`                 | IntersectionObserver の `rootMargin` プロパティで、`root` の周りのマージンを指定する（デフォルト： `0px`）                                   | string、undefined                    |
 | `threshold`                  | IntersectionObserver の `threshold` プロパティで、ターゲットがどのくらいの割合見えてたらコールバックを実行するを指定する（デフォルト： `0`） | number、 number[]、 undefined        |
-| `once`                       | コールバックの実行を 1 度だけにする（デフォルト： `true`）                                                                                   | 　 boolean、 undefined               |
+| `once`                       | コールバックの実行を 1 度だけにする（デフォルト： `false`）                                                                                  | 　 boolean、 undefined               |
 | `scrub`                      | スクラブ機能を有効にする（デフォルト： `false`）                                                                                             | 　 boolean、 undefined               |
 | `velocityCustomProperty`     | スクラブ有効時にスクロール速度を表す CSS カスタムプロパティを付与する（デフォルト: `false`）                                                 | boolean、 undefined                  |
 | `progressCustomPropertyName` | スクラブ有効時にスクロール進行度を表す CSS カスタムプロパティの名前（デフォルト: `--rola-progress`）                                         | string undefined                     |
@@ -259,14 +260,14 @@ new Rola("[data-rola-trigger]", { once: false, scrub: true });
 </figure>
 ```
 
-rola.css 　を使っている場合は、ターゲット要素に `data-rola-animation` 属性を使って `fade-in` などの属性値を指定することでアニメーションできます。
+rola.css 　を使っている場合は、ターゲット要素に `data-rola-effect` 属性を使って `fade` などの属性値を指定することでアニメーションできます。
 利用できる値は以下のとおりです。
 
-- `fade-in`
-- `fade-out`
-- `scale-in`
-- `scale-out`
-- `parallax`
+- `fade`
+- `scale`
+- `translate`
+- `clip`
+- `text-clip`
 
 ## コールバック
 

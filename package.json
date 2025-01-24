@@ -1,6 +1,6 @@
 {
   "name": "@hilosiva/rola",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Rola is JavaScript library for managing IntersectionObserver and scroll-based animations.",
   "type": "module",
   "main": "dist/index.js",

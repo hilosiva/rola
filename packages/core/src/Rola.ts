@@ -17,8 +17,8 @@ export default class Rola {
   private static isScrubRunning = false;
   private static resizeObserver: ResizeObserver | null = null;
   private static observers: Map<string, IntersectionObserver> = new Map();
-  private static entries: Map<Element, EntryOptions> = new Map();
-  private static scrubEntries: Map<Element, EntryOptions> = new Map();
+  private static entries: Map<Element, { entryOptions: EntryOptions; callback?: CallbackFunction }> = new Map();
+  private static scrubEntries: Map<Element, { entryOptions: EntryOptions; callback?: CallbackFunction }> = new Map();
   private static requestAnimationFrameId: number | null = null;
   private static windowHeight: number = window.innerHeight;
   private static previousScrollY: number | null = null;
@@ -54,7 +54,7 @@ export default class Rola {
 
     if (!Rola.observers.has(observerKey)) {
       const observer = new IntersectionObserver((entries) => {
-        Rola._handleIntersection(entries, observer, callback);
+        Rola._handleIntersection(entries, observer);
       }, options);
       Rola.observers.set(observerKey, observer);
     }
@@ -63,7 +63,7 @@ export default class Rola {
     for (const el of elements) {
       const entryOptions = Rola._getEntryOptions(el, configs);
 
-      Rola.entries.set(el, entryOptions);
+      Rola.entries.set(el, { entryOptions, callback });
 
       entryOptions.target?.setAttribute(`data-${Rola.prefix}-inview`, "false");
 
@@ -78,9 +78,13 @@ export default class Rola {
   /**
    * Handles the intersection of observed elements.
    */
-  private static _handleIntersection(entries: IntersectionObserverEntry[], observer: IntersectionObserver, callback?: CallbackFunction) {
+  private static _handleIntersection(entries: IntersectionObserverEntry[], observer: IntersectionObserver) {
     for (const entry of entries) {
-      const entryOptions = Rola.entries.get(entry.target);
+      const entryData = Rola.entries.get(entry.target);
+
+      if (!entryData) continue;
+
+      const { entryOptions, callback } = entryData;
 
       if (entry.isIntersecting) {
         entryOptions?.target?.setAttribute(`data-${Rola.prefix}-inview`, "true");
@@ -89,9 +93,9 @@ export default class Rola {
 
         if (entryOptions?.scrub) {
           Rola._initResizeObserver();
-          Rola.scrubEntries.set(entry.target, entryOptions);
+          Rola.scrubEntries.set(entry.target, entryData);
           Rola.resizeObserver?.observe(entry.target);
-          Rola.scrubStart(callback);
+          Rola.scrubStart();
         }
 
         if (entryOptions?.once) {
@@ -125,10 +129,10 @@ export default class Rola {
   /**
    * Waits for a scroll event to restart scrubbing.
    */
-  private static _waitForScroll(callback?: CallbackFunction) {
+  private static _waitForScroll() {
     const onScroll = () => {
       window.removeEventListener("scroll", onScroll, { capture: true });
-      Rola.scrubStart(callback);
+      Rola.scrubStart();
     };
 
     window.addEventListener("scroll", onScroll, { capture: true, once: true });
@@ -195,19 +199,22 @@ export default class Rola {
     Rola.windowHeight = window.innerHeight;
 
     const rect = el.getBoundingClientRect();
-    const entryOptions = Rola.entries.get(el);
-    if (entryOptions) {
-      entryOptions.rect = rect;
-      entryOptions.top = rect.top + window.scrollY; // 初期位置を更新
-      entryOptions.margin = getRootMargin(entryOptions.rootMargin);
-      Rola.entries.set(el, entryOptions);
-    }
+    const entryData = Rola.entries.get(el);
+
+    if (!entryData) return;
+
+    const { entryOptions, callback } = entryData;
+
+    entryOptions.rect = rect;
+    entryOptions.top = rect.top + window.scrollY; // 初期位置を更新
+    entryOptions.margin = getRootMargin(entryOptions.rootMargin);
+    Rola.entries.set(el, { entryOptions, callback });
   }
 
   /**
    * Starts the scrubbing process using `requestAnimationFrame`.
    */
-  static scrubStart(callback?: CallbackFunction) {
+  static scrubStart() {
     if (Rola.isScrubRunning || Rola.scrubEntries.size === 0) return;
     Rola.isScrubRunning = true;
     Rola.previousScrollY = null;
@@ -218,14 +225,14 @@ export default class Rola {
       const currentScrubEntryCount = Rola.scrubEntries.size;
 
       if (Rola.isScrubRunning && (Rola.previousScrubEntryCount !== currentScrubEntryCount || Rola.previousScrollY !== currentScrollY)) {
-        Rola.update(callback);
+        Rola.update();
 
         Rola.previousScrollY = currentScrollY;
         Rola.previousScrollTime = currentTime;
         Rola.previousScrubEntryCount = currentScrubEntryCount;
       } else if (currentTime - Rola.previousScrollTime > Rola.stopThreshold) {
         Rola.stopScrub();
-        Rola._waitForScroll(callback);
+        Rola._waitForScroll();
         return;
       }
 
@@ -255,8 +262,10 @@ export default class Rola {
   /**
    * Updates the progress of scrub-enabled elements based on scroll position.
    */
-  static update(callback?: CallbackFunction) {
-    for (const [el, entryOptions] of Rola.scrubEntries.entries()) {
+  static update() {
+    for (const [el, entryData] of Rola.scrubEntries.entries()) {
+      const { entryOptions, callback } = entryData;
+
       const rectTop = entryOptions.top - window.scrollY;
       const scrubRootHeight = entryOptions.scrubRoot === "element" ? entryOptions.rect.height : Rola.windowHeight;
 
@@ -285,7 +294,7 @@ export default class Rola {
         if (callback) callback(el, Rola.isScrubRunning, entryOptions, progress);
 
         entryOptions.previousProgress = progress;
-        Rola.scrubEntries.set(el, entryOptions);
+        Rola.scrubEntries.set(el, { entryOptions, callback });
       }
     }
   }

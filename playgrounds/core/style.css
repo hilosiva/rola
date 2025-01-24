@@ -1,4 +1,4 @@
-@import url("../src/rola.css");
+/* @import url("../../src/rola.css"); */
 
 * {
   margin: 0;
@@ -178,6 +178,34 @@ h1 {
     background-clip: text;
     background-size: 200% 100%;
   }
+
+  [data-rola-effect="translate"] {
+    --rola-effect-x-start: 0%;
+    --rola-effect-x-end: calc(100vi - 100%);
+    --rola-effect-y-start: 0%;
+    --rola-effect-y-end: calc(100vb - 100%);
+
+    position: sticky;
+    /* top: 0; */
+    top: 0vh;
+  }
+  [data-rola-effect="scale"] {
+    --rola-effect: 1;
+    --rola-effect-x-start: 0;
+    --rola-effect-x-end: 1;
+    --rola-effect-z-start: 1;
+    --rola-effect-z-end: 2;
+  }
+  [data-rola-effect="text-clip"] {
+    inline-size: fit-content;
+    /* --rola-effect-color-end: #fff; */
+    /* --rola-effect-color-start: #333; */
+  }
+
+  [data-rola-animation="parallax"] {
+    --rola-parallax-range-y: 200px;
+    /* --rola-parallax-end-x: 200px; */
+  }
 }
 
 .photo {
@@ -200,10 +228,10 @@ h1 {
 }
 
 .box {
-  &[data-rola-animation] {
-    --rola-range-start: 0%;
+  &[data-rola-animation="parallax"] {
+    /* --rola-range-start: 0%;
     --rola-range-end: calc(100vh - 100%);
-    --rola-duration: 1s;
+    --rola-duration: 1s; */
 
     &:nth-child(1) {
       --rola-depth: 1;

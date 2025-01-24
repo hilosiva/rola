@@ -41,7 +41,7 @@ export default class Rola {
       root: null,
       rootMargin: "0px",
       threshold: 0,
-      once: true,
+      once: false,
       scrub: false,
       velocityCustomProperty: false,
       progressCustomPropertyName: `--${Rola.prefix}-progress`,

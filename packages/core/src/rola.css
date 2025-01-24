@@ -66,7 +66,7 @@
   }
 
   [data-rola-effect] {
-    --rola-progress-start: calc(1 - var(--rola-progress, 0) * var(--rola-depth, 1));
+    --rola-progress-start: calc(1 - var(--rola-progress, 1) * var(--rola-depth, 1));
     --rola-progress-end: calc(var(--rola-progress, 0) * var(--rola-depth, 1));
     --rola-effect: calc(var(--rola-effect-start) * var(--rola-progress-start) + var(--rola-effect-end) * var(--rola-progress-end));
     --rola-effect-x: calc(var(--rola-effect-x-start) * var(--rola-progress-start) + var(--rola-effect-x-end) * var(--rola-progress-end));
@@ -97,9 +97,6 @@
   }
 
   [data-rola-effect="translate"] {
-    --rola-effect-start: 0%;
-    --rola-effect-end: calc(100vi - 100%);
-
     translate: var(--rola-effect-x, 0) var(--rola-effect-y, 0) var(--rola-effect-z, 0);
 
     &[data-rola-dynamic-easing] {

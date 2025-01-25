@@ -1,0 +1,329 @@
+---
+title: インビュー機能
+description: 要素がビューポートに入ったかどうかを監視する
+---
+
+import { Tabs, TabItem, Code, Steps } from '@astrojs/starlight/components';
+
+
+`data-rola-inview` 属性の値（ `true` / `false` ）に応じた属性セレクタを用意することで、トリガー要素が画面内に入った際に任意のアニメーションを実行する**インビューアニメーション**を簡単に作成できます。
+
+
+## アニメーション用のCSS
+
+インビューアニメーション用のCSSは自由に作成できます。
+なお、rola.css には、あらかじめ フェード などのよく使うであろうアニメーションを用意しています。
+
+
+<Tabs>
+  <TabItem label="User CSS">
+    `data-rola-inview` 属性の値（ `true` / `false` ）活用して、`transition` プロパティ や `animation` プロパティで任意のアニメーションを作成します。
+
+    例えば、以下のようなCSSを用意します。
+
+    :::caution
+    CSS Nesting Module に非対応の場合は、ネストを解除して作成してください
+    :::
+
+
+    ```css
+    // style.css
+    .rola-transition {
+      --duration: 0.6s;
+      --easing: ease-out;
+      --property: opacity;
+
+      transition: var(--duration) var(--easing);
+      transition-property: var(--property);
+    }
+
+    .rola-fade-in {
+      --duration: 1s;
+      --easing: ease;
+
+      &[data-rola-inview="false"] {
+        opacity: 0;
+      }
+      &[data-rola-inview="true"] {
+        opacity: 1;
+      }
+    }
+
+    .rola-blur-in {
+      --property: opacity, filter;
+
+      &[data-rola-inview="false"] {
+        filter: blur(8px);
+        opacity: 0;
+      }
+      &[data-rola-inview="true"] {
+        filter: blur(0);
+        opacity: 1;
+      }
+    }
+
+    .rola-slide-up-in {
+      --property: opacity, translate;
+
+      &[data-rola-inview="false"] {
+        translate: 0 3rem;
+        opacity: 0;
+      }
+      &[data-rola-inview="true"] {
+        translate: 0 0;
+        opacity: 1;
+      }
+    }
+    ```
+
+    これで、以下のようなHTMLを準備し、Rolaをインスタンス化するとインビューアニメーションが可能です。
+
+    ```html /rola-transition/ /rola-fade-in/
+    // index.html
+    <p class="rola-transition rola-fade-in" data-rola-trigger>
+      Rola is a library for scroll management
+    </p>
+    ```
+
+    ```javascript
+    // main.js
+    new Rola("[data-rola-trigger]");
+    ```
+
+
+    <iframe src="/demo/02_inview/inview_01/index.html" style="min-height: 400px"></iframe>
+
+
+
+    :::caution
+    OS の「視差効果を減らす」機能を有効にしているユーザーには、`@media` ルールの `prefers-reduced-motion` を活用してアニメーションを無効にすることを推奨します。
+
+    ```css
+    // style.css
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *:before,
+      *:after {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+    ```
+    :::
+
+  </TabItem>
+  <TabItem label="Rola CSS">
+    rola.css を読み込んでいる場合は、ターゲット要素に `data-rola-transition` 属性を付けるだけで手軽にインビューアニメーションが利用できます。
+
+    ```html ins="data-rola-transition=\"fade\""
+    // index.html
+    <p data-rola-trigger data-rola-transition="fade">Rola is a library for scroll management</p>
+    ```
+
+
+    ```javascript
+    // main.js
+    new Rola("[data-rola-trigger]");
+    ```
+
+    <iframe src="/demo/02_inview/inview_02/index.html" style="min-height: 400px"></iframe>
+
+    利用できる属性値は以下のとおりで、デュレーションやイージングなどは、ご自身のCSSで上書きも可能ですが、これらを変更できるカスタムプロパティも用意しています。
+
+    - `fade`
+
+      | カスタムプロパティ | 役割 | デフォルト値 | 型 |
+      | --- | --- | --- | --- |
+      | `--rola-duration` | トランジションの長さ | `0.6s` | `<time>` |
+      | `--rola-easing` | トランジションのイージング | `cubic-bezier(0.37, 0, 0.63, 1)` | `<easing-function>` |
+      | `--rola-opacity-start` | トランジション開始時の不透明度 | `0` | `<opacity-value>` |
+      | `--rola-opacity-end` | トランジション開始時の不透明度 | `1` | `<opacity-value>` |
+
+
+          ```css
+      // style.css
+      [data-rola-transition="fade"] {
+        --rola-duration: 1s;
+        --rola-easing: cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      ```
+
+    - `blur`
+
+      | カスタムプロパティ | 役割 | デフォルト値 | 型 |
+      | --- | --- | --- | --- |
+      | `--rola-duration` | トランジションの長さ | `0.6s` | `<time>` |
+      | `--rola-easing` | トランジションのイージング | `cubic-bezier(0.25, 1, 0.5, 1)` | `<easing-function>` |
+      | `--rola-blur-start` | トランジション開始時のぼかし | `8px` | `<length>` |
+      | `--rola-blur-end` | トランジション終了時のぼかし | `0` | `<length>` |
+      | `--rola-opacity-start` | トランジション開始時の不透明度 | `0` | `<opacity-value>` |
+      | `--rola-opacity-end` | トランジション開始時の不透明度 | `1` | `<opacity-value>` |
+
+
+
+          ```css
+      // style.css
+      [data-rola-transition="blur"] {
+        --rola-duration: 1s;
+        --rola-blur-start: 16px;
+      }
+      ```
+
+    - `scale`
+
+      | カスタムプロパティ | 役割 | デフォルト値 | 型 |
+      | --- | --- | --- | --- |
+      | `--rola-duration` | トランジションの長さ | `0.6s` | `<time>` |
+      | `--rola-easing` | トランジションのイージング | `cubic-bezier(0.37, 0, 0.63, 1)` | `<easing-function>` |
+      | `--rola-scale-start` | トランジション開始時のスケール | `8px` | `<number> \| <percentage>` |
+      | `--rola-scale-end` | トランジション終了時のスケール | `0` | `<number> \| <percentage>` |
+      | `--rola-opacity-start` | トランジション開始時の不透明度 | `0` | `<opacity-value>` |
+      | `--rola-opacity-end` | トランジション開始時の不透明度 | `1` | `<opacity-value>` |
+
+
+
+          ```css
+      // style.css
+      [data-rola-transition="scale"] {
+        --rola-duration: 1s;
+        --rola-scale-start: 0.5;
+      }
+      ```
+
+    - `slide`
+
+      | カスタムプロパティ     | 役割                           | デフォルト値                     | 型                  |
+      | ---------------------- | ------------------------------ | -------------------------------- | ------------------- |
+      | `--rola-duration`      | トランジションの長さ           | `0.6s`                           | `<time>`            |
+      | `--rola-easing`        | トランジションのイージング     | `cubic-bezier(0.37, 0, 0.63, 1)` | `<easing-function>` |
+      | `--rola-slide-start-x` | トランジション開始時の水平方向の `translate`   | `0`                            | `<length-percentage>`          |
+      | `--rola-slide-end-x`   | トランジション終了時の水平方向の `translate`  | `0`                              | `<length-percentage>`          |
+      | `--rola-slide-start-y` | トランジション開始時の垂直方向の `translate`  | `4rem`                            | `<length-percentage>`          |
+      | `--rola-slide-end-y`   | トランジション終了時の垂直方向の `translate`   | `0`                              | `<length-percentage>`          |
+      | `--rola-opacity-start` | トランジション開始時の不透明度 | `0`                              | `<opacity-value>`   |
+      | `--rola-opacity-end`   | トランジション開始時の不透明度 | `1`                              | `<opacity-value>`   |
+
+          ```css
+      // style.css
+      [data-rola-transition="slide"] {
+        --rola-slide-start-x: -100%;
+        --rola-slide-start-y: 0;
+      }
+      ```
+
+  </TabItem>
+</Tabs>
+
+
+
+## ビューポートのマージン
+`rootMargin` オプションを使えば、`data-rola-inview` 属性の値（ `true` / `false` ）が切り替わるタイミングをコントロールできます。初期値は `0px` となっており、ビューポート内に要素が少しでも入ったら `data-rola-inview` 属性が `true` になります。
+
+`rootMargin` は `IntersectionObserver` の `rootMargin` オプションと同等で CSSの `margin` プロパティのように設定します。
+
+```javascript
+// main.js
+new Rola("[data-rola-trigger]", {
+  rootMargin: "0px 0px -30%"
+});
+```
+
+上記の例では、ビューポートの1番上から、下から 30% までのエリアにトリガー要素が入った時に `data-rola-inview` 属性が `true` になります。
+
+<iframe src="/demo/02_inview/inview_03/index.html" style="min-height: 400px"></iframe>
+
+:::note
+ `rootMargin` の詳細は、`IntersectionObserver` のドキュメントなどをご確認ください。
+
+[交差オブザーバー API | Web API | MDN](https://developer.mozilla.org/ja/docs/Web/API/Intersection_Observer_API)
+:::
+
+:::caution
+ `iframe` 要素などで埋め込まれるコンテンツとして `rootMargin` を有効にするには、`root` オプションに `document` の指定も合わせて行ってください。
+
+ これは、`IntersectionObserver` の`root` オプションの初期値が `null` であるため、既定では最上位の ` Document` 、すなわちブラウザのビューポートが採用されるためです。
+
+ ```diff lang="javascript"
+// main.js
+new Rola("[data-rola-trigger]", {
++ root: document,
+  rootMargin: "0px 0px -30%"
+});
+```
+:::
+
+
+## 1度だけ実行させる
+`once` オプションを使えば、`data-rola-inview` 属性の`false` から `true` の切り替えを1度だけにすることができます。
+
+デフォルトは `false` になっており、トリガー要素がビューポートに入るたびに実行されますが、`true` にすることで、はじめてビューポートに入った時だけ実行するようになります。
+
+```javascript
+// main.js
+new Rola("[data-rola-trigger]", {
+  once: true,
+});
+```
+
+
+<iframe src="/demo/02_inview/inview_04/index.html" style="min-height: 400px"></iframe>
+
+
+なお、特定のトリガー要素のみ `once` オプションを有効にしたい場合は、トリガー要素に `data-rola-once` 属性を指定します。
+
+
+```html /data-rola-once/
+// index.html
+
+<!-- once を 有効化 -->
+<div class="rola-fade-in" data-rola-trigger data-rola-once>...</div>
+<div class="rola-fade-in" data-rola-trigge data-rola-once="true">...</div>
+
+<!-- once を 無効化 -->
+<div class="rola-fade-in" data-rola-trigger data-rola-once="false">...</div>
+```
+
+## ターゲット要素の変更
+
+デフォルトでは、トリガー要素に `data-rola-inview` 属性が付与されますが、時にはトリガー要素ではない要素をアニメーションしたい場合などもあります。その場合は トリガー要素に `data-rola-target`属性を使い、 `data-rola-inview` 属性を付与させたい要素（ターゲット要素）を CSSセレクタで指定します。
+
+```html /data-rola-target="#target"/
+// index.html
+<div data-rola-trigger data-rola-target="#target">...</div>
+...
+<div id="target" class="rola-fade-in">...</div>
+```
+
+これにより、トリガー要素がビューポートに入ったら、ターゲット要素の`data-rola-inview` 属性が `true` になります。
+
+
+## JavaScriptによる操作
+
+Rola は、インスタンス作成時の第3引数にコールバック関数を持たせることができます。
+
+コールバック関数はトリガー要素がビューポートに入るタイミングと、ビューポートから出るタイミングで実行されます。
+`once` オプションが有効な場合には、最初にビューポートに入ったタイミングで1度だけ実行されます。
+
+
+```javascript
+// main.js
+const callback = (element, isInView, options) => {
+  if (isInView) {
+    console.log(`トリガー要素がビューポートに入った`);
+  } else {
+    console.log(`トリガー要素がビューポートから出た`);
+  }
+};
+
+new Rola("[data-rola-trigger]", { rootMargin: "0px 0px -30%" }, callback);
+```
+
+これにより、CSSだけでは表現できないようなこともJavaScriptを使って実現できるようになります。
+
+例えば、`video` 要素で埋め込んだ動画が、ビューポートに入ったら再生し、ビューポートから出たら停止するといったことに使えます。
+
+:::caution
+動画の自動再生を期待しないユーザーもいます。
+
+一時停止ボタンの提供、音を出さない、OS の「視差効果を減らす」機能を有効にしているユーザーには自動再生しないなどの配慮も行ってください。
+:::

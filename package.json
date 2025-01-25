@@ -9,6 +9,7 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "vite": "pnpm run --filter=vite-playground dev",
+    "docs:dev": "pnpm run --filter=rola-docs dev",
     "test": "vitest",
     "lint": "biome check .",
     "lint:fix": "biome check . --write",

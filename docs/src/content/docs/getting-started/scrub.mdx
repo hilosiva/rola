@@ -1,0 +1,460 @@
+---
+title: スクラブ機能
+description: ビューポート内の要素のスクロール進行度を管理
+---
+
+import { Tabs, TabItem, Code, Steps } from '@astrojs/starlight/components';
+
+
+`scrub` オプションを有効にすれば、トリガー要素がビューポートに入ってから出るまでの進行度が管理され、パララックスなどのスクラブアニメーションを作成することができます。
+
+
+```javascript
+// main.js
+new Rola("[data-rola-trigger]", {
+  scrub: true,
+});
+```
+
+なお、特定のトリガー要素のみ `scrub` オプションを有効にしたい場合は、トリガー要素に `data-rola-scrub` 属性を指定します。
+
+
+```html /data-rola-scrub/
+// index.html
+
+<!-- scrub を 有効化 -->
+<div data-rola-trigger data-rola-scrub>...</div>
+<div data-rola-trigge data-rola-scrub="true">...</div>
+
+<!-- scrub を 無効化 -->
+<div data-rola-trigger data-rola-scrub="false">...</div>
+```
+
+これにより、トリガー要素がビューポートの下から入り、上に出るまでの進行度を `--rola-progress` カスタムプロパティから取得できます。
+
+## アニメーション用のCSS
+
+スクラブアニメーション用のCSSは、`--rola-progress` カスタムプロパティを活用して自由に作成できます。
+
+`--rola-progress` カスタムプロパティは、トリガー要素のビューポート内のスクロール進行度に応じて `0`（ビューポートの下部） ~ `1` （スクラブアニメーションの終了）に変化します。
+
+デフォルトでは、トリガー要素の上部がビューポートの下部に入った時に `0` となり、 トリガー要素の下部がビューポートの上部に辿り着いた時に `1` となります。
+
+なお、rola.css には、あらかじめ フェード などのよく使うであろうアニメーションを用意しています。
+
+
+<Tabs>
+  <TabItem label="User CSS">
+    `--rola-progress` を活用し、進行度に応じて任意な値になるようなスタイルを作成します。
+
+    `--rola-progress` は `0` 〜 `1` の数値が提供されるため、`opcaity` や `scale` のように数値を直接受け入れるプロパティにはそのまま使えます。
+    また、`calc()` などと組み合わせることで自由な値や単位に変換できるため、アイデア次第で自由なスクラブアニメーションを作成できます。
+
+    :::tip[Tips]
+    以下のようなカスタムプロパティを定義しておくと、`--scrub-start` にアニメーションの開始時の値、`--scrub-end` に終了時の値をセットするだけでアニメーションを作成できるので便利です。
+
+    ```css
+    .rola-scrub {
+      --scrub-value: calc(var(--scrub-start) * (1 - var(--rola-progress, 0) * var(--depth, 1)) + var(--scrub-end) * (var(--rola-progress, 0) * var(--depth, 1)));
+    }
+    ```
+    :::
+
+
+
+    例えば、以下のようなCSSを用意します。
+
+
+    ```css
+    // style.css
+    @media (prefers-reduced-motion: no-preference) {
+      .rola-scrub-fade-in {
+        opacity: var(--rola-progress, 0);
+      }
+
+      .rola-scrub-translate-x,
+      .rola-scrub-translate-y {
+        --scrub-value: calc(var(--scrub-start) * (1 - var(--rola-progress, 0) * var(--depth, 1)) + var(--scrub-end) * (var(--rola-progress, 0) * var(--depth, 1)));
+      }
+
+      .rola-scrub-translate-x {
+        --scrub-start: 0%;
+        --scrub-end: calc(100vi - 100%);
+
+        translate: var(--scrub-value);
+      }
+
+      .rola-scrub-translate-y {
+        --scrub-start: 300px;
+        --scrub-end: 0px;
+
+        translate: 0 var(--scrub-value);
+      }
+
+      .rola-scrub-clip-in {
+        clip-path: inset(calc(30% * (1 - var(--rola-progress, 0))));
+      }
+
+      .rola-scrub-text-clip-in {
+        color: transparent;
+        background-image: linear-gradient(90deg, var(--scrub-color-end, #000) 50%, var(--scrub-color-start, #ccc) 50%, var(--scrub-color-start, #ccc) 100%);
+        background-position: calc(100% * (1 - var(--rola-progress, 0))) 0;
+        background-clip: text;
+        background-size: 200% 100%;
+      }
+    }
+    ```
+
+
+
+    :::caution
+    OS の「視差効果を減らす」機能を有効にしているユーザーには、`@media` ルールの `prefers-reduced-motion` を活用してアニメーションしないように設計することを推奨します。
+    :::
+
+    これで、以下のようなHTMLを準備し、Rolaをインスタンス化するとスクラブアニメーションが可能です。
+
+    ```html /rola-scrub-text-clip-in/ /rola-scrub-translate-y/
+    // index.html
+    <p class="rola-scrub-text-clip-in text-large" data-rola-trigger>
+      Rola is a library for scroll management
+    </p>
+
+    <figure class="sticky" data-rola-trigger>
+      <img src="pizza.webp" class="rola-scrub-translate-y sticky-image" width="1384" height="924" alt="石窯から出てきたばかりの焼きたてマルゲリータ" decoding="async" loading="lazy">
+    </figure>
+    ```
+
+    ```javascript
+    // main.js
+    new Rola("[data-rola-trigger]", {
+      scrub: true
+    });
+    ```
+
+
+
+
+    <iframe src="/demo/02_scrub/scrub_01/index.html" style="min-height: 500px"></iframe>
+
+  </TabItem>
+  <TabItem label="Rola CSS">
+    rola.css を読み込んでいる場合は、ターゲット要素に `data-rola-effect` 属性を付けるだけで手軽にスクラブアニメーションが利用できます。
+
+    ```html ins="data-rola-effect=\"text-clip\""
+    // index.html
+    <p data-rola-trigger data-rola-effect="text-clip">
+      Rola is a library for scroll management
+    </p>
+    ```
+
+
+    ```javascript
+    // main.js
+    new Rola("[data-rola-trigger]");
+    ```
+
+
+     <iframe src="/demo/02_scrub/scrub_02/index.html" style="min-height: 500px"></iframe>
+
+    利用できる属性値は以下のとおりで、進行度によるスタイルの状態は、ご自身のCSSで上書きも可能ですが、これらを変更できるカスタムプロパティも用意しています。
+
+    - `fade`
+
+      | カスタムプロパティ | 役割 | デフォルト値 | 型 |
+      | --- | --- | --- | --- |
+      | `--rola-effect-start` | アニメーション開始時の不透明度 | `0` | `<opacity-value>` |
+      | `--rola-effect-end` | アニメーション終了時の不透明度 | `1` | `<opacity-value>` |
+
+
+          ```css
+      // style.css
+      [data-rola-effect="fade"] {
+        --rola-effect-end: 0.5;
+      }
+      ```
+
+    - `scale`
+
+      | カスタムプロパティ | 役割 | デフォルト値 | 型 |
+      | --- | --- | --- | --- |
+      | `--rola-effect-start` | アニメーション開始時のXとY軸のスケール | `0` | `<number> \| <percentage>` |
+      | `--rola-effect-end` | アニメーション終了時のXとY軸のスケール | `1` | `<number> \| <percentage>` |
+      | `--rola-effect-x-start` | アニメーション開始時のX軸のスケール | – | `<number> \| <percentage>` |
+      | `--rola-effect-x-end` | アニメーション終了時のX軸のスケール | – | `<number> \| <percentage>` |
+      | `--rola-effect-y-start` | アニメーション開始時のY軸のスケール | – | `<number> \| <percentage>` |
+      | `--rola-effect-y-end` | アニメーション終了時のY軸のスケール | – | `<number> \| <percentage>` |
+      | `--rola-effect-z-start` | アニメーション開始時のZ軸のスケール | – | `<number> \| <percentage>` |
+      | `--rola-effect-z-end` | アニメーション終了時のZ軸のスケール | – | `<number> \| <percentage>` |
+
+
+
+          ```css
+      // style.css
+      [data-rola-effect="scale"] {
+        --rola-effect-start: 0.5;
+      }
+      ```
+
+    - `translate`
+
+      | カスタムプロパティ     | 役割                           | デフォルト値                     | 型                  |
+      | ---------------------- | ------------------------------ | -------------------------------- | ------------------- |
+      | `--rola-effect-x-start` | アニメーション開始時の水平方向の `translate` | – | `<length-percentage>` |
+      | `--rola-effect-x-end` | アニメーション終了時の水平方向の `translate` | – | `<length-percentage>` |
+      | `--rola-effect-y-start` | アニメーション開始時の垂直方向の `translate` | – | `<length-percentage>` |
+      | `--rola-effect-y-end` | アニメーション終了時の垂直方向の `translate` | – | `<length-percentage>` |
+      | `--rola-effect-z-start` | アニメーション開始時のZ軸方向の `translate` | – | `<length>` |
+      | `--rola-effect-z-end` | アニメーション終了時のZ軸方向の `translate` | – | `<length>` |
+
+          ```css
+      // style.css
+      [data-rola-effect="translate"] {
+        --rola-effect-x-start: -200px;
+        --rola-effect-x-end: 0;
+      }
+      ```
+
+    - `clip`
+
+      | カスタムプロパティ     | 役割                           | デフォルト値                     | 型                  |
+      | ---------------------- | ------------------------------ | -------------------------------- | ------------------- |
+      | `--rola-effect-start` | アニメーション開始時のクリップ率 | `30%` | `<length-percentage>` |
+      | `--rola-effect-end` | アニメーション終了時のクリップ率 | `0%` | `<length-percentage>` |
+
+          ```css
+      // style.css
+      [data-rola-effect="clip"] {
+        --rola-effect-start: 100%;
+      }
+      ```
+
+    - `text-clip`
+
+      | カスタムプロパティ     | 役割                           | デフォルト値                     | 型                  |
+      | ---------------------- | ------------------------------ | -------------------------------- | ------------------- |
+      | `--rola-effect-start` | アニメーション開始時の位置 | `100%` | `<length-percentage>` |
+      | `--rola-effect-end` | アニメーション終了時の位置 | `0%` | `<length-percentage>` |
+      | `--rola-effect-angle` | テキストカラーの角度 | `90deg` | `<angle>` |
+      | `--rola-effect-color-start` | アニメーション開始時のテキストカラー | `color-mix(in srgb, var(--rola-effect-color-end, light-dark(#fff, #000))` | `<color>` |
+      | `--rola-effect-color-end` | アニメーション終了時のテキストカラー  | `canvastext` | `<color>` |
+      | `--rola-effect-opacity` | `--rola-effect-color-start`が指定されていない時の`color-mix()`で使用する不透明度  | `50%` | `<percentage>` |
+      | `--rola-effect-background-size` | 背景グラデーションのサイズ  | `200% 100%` | `<bg-size>` |
+
+      ```css
+      // style.css
+      [data-rola-effect="text-clip"] {
+        --rola-effect-color-end: #101010;
+      }
+      ```
+
+
+  </TabItem>
+</Tabs>
+
+
+:::tip[Tips]
+`translate` プロパティなどで、垂直方向に移動するスクラブアニメーションは、マウスホイールによるスクロール移動とスクラブによる移動によりガタガタ動くケースが多いです。垂直方向に移動するスクラブアニメーションは、`position: sticky` や `fixed` などで位置を固定した要素に適用するか、 [Lenis](https://lenis.darkroom.engineering/) などの慣性スクロールを組み合わせ、スクロールによる移動が自然になるようにコントロールすることがポイントです。
+:::
+
+
+## 進捗管理の開始と終了
+Rolaのスクラブ機能のデフォルトは、トリガー要素の上部がビューポートの下部に入った時に `0` となり、 トリガー要素の下部がビューポートの上部に辿り着いた時に `1` となります。
+
+進捗管理を開始するタイミングと終了するタイミングは、トリガー要素に `data-rola-scrub-start` 属性と、`data-rola-scrub-end` 属性を使うことで変更できます。
+
+属性値は、`要素の基準点 ビューポートの基準点`を、それぞれ パーセンテージ、または `top`（`0%`と同じ）、`center`（`50%`と同じ）、`bottom`（`100%`と同じ） で指定します。 値が1つの場合は、要素の基準点 として扱われ、ビューポートの基準点は、`data-rola-scrub-start` 属性の場合は、`bottom`、`data-rola-scrub-end` 属性の場合は、`top` が指定されます。
+
+`data-rola-scrub-start` 属性に指定した 2 つの基準点が交差した位置から進捗管理が開始し、`data-rola-scrub-end` 属性に指定した 2 つの基準点が交差した位置で進捗管理が終了します。
+
+
+```html /data-rola-scrub-start="bottom"/ /data-rola-scrub-end="top center"/ /data-rola-scrub-start="0% 0%"/
+<p class="rola-scrub-text-clip-in text-large" data-rola-trigger data-rola-scrub-start="bottom" data-rola-scrub-end="top center">
+  Rola is a library for scroll management
+</p>
+
+<figure class="sticky" data-rola-trigger data-rola-scrub-start="0% 0%">
+  <img src="pizza.webp" class="rola-scrub-translate-y sticky-image" width="1384" height="924" alt="石窯から出てきたばかりの焼きたてマルゲリータ" decoding="async" loading="lazy">
+</figure>
+```
+
+<iframe src="/demo/02_scrub/scrub_03/index.html" style="min-height: 500px"></iframe>
+
+例えば上記の例では、`p`要素には `data-rola-scrub-start` 属性に `bottom` が指定されています。
+値がひとつのため、ビューポートの基準点は規定値の `bottom` となります
+
+この場合、トリガー要素の下の辺が、ビューポートの下の位置を交差した時に `--rola-progress` が `0` となります。
+
+そして、`data-rola-scrub-end` 属性に `top center` が指定されているため、トリガー要素の上の辺がビューポートの垂直中央の位置を交差した時に `--rola-progress` が `1` になります。
+
+`figure`要素は `data-rola-scrub-start` 属性に `0% 0%` が指定されています。
+
+従って、トリガー要素の上の辺が、ビューポートの上の位置を交差した時に `--rola-progress` が `0` となります。
+
+`data-rola-scrub-end` 属性は、指定されていないため、規定値の `bottom top` となり、トリガー要素の下の辺がビューポートの上の位置を交差した時に `--rola-progress` が `1` になります。
+
+
+:::note
+サンプルのデモでは、ピザの画像がビューポートに入ってすぐにスクラブアニメーションが実行されているように見えると思います。これは、`figure`要素が、`p`要素の親要素の `div`要素（`min-block-size: 100vb`）と 重なるように配置されており、`position: sticky` で粘着してこのような表現にしてあるためです。詳しくはデベロッパーツールなどで、`figure` 要素の位置やCSSを確認してみてください。正しくピザの画像の上がビューポートの上と交差した位置からスクラブアニメーションが始まってることが確認できます。このように `position: sticky` を活用することでさまざまスクラブアニメーションの表現が可能です。
+:::
+
+## ダイナミックイージング
+`velocityCustomProperty` オプションを有効にすると、ターゲット要素に、スクロールの速さを計算するのに便利な値（前回のスクロールと今回のスクロールの差の絶対値）を `--rola-velocity` カスタムプロパティで提供します。
+
+
+```javascript
+// main.js
+new Rola("[data-rola-trigger]", {
+  velocityCustomProperty: true
+});
+```
+なお、特定のトリガー要素のみ `velocityCustomProperty` オプションを有効にしたい場合は、トリガー要素に `data-rola-velocity` 属性を指定します。
+
+
+```html /data-rola-velocity/
+// index.html
+
+<!-- velocityCustomProperty を 有効化 -->
+<div class="rola-fade-in" data-rola-trigger data-rola-velocity>...</div>
+<div class="rola-fade-in" data-rola-trigger data-rola-velocity="true">...</div>
+
+<!-- velocityCustomProperty を 無効化 -->
+<div class="rola-fade-in" data-rola-trigger data-rola-velocity="false">...</div>
+```
+
+
+このカスタムプロパティを活用して、スクロールの速さに応じたダイナミックなイージングを作ることが可能です。
+
+<Tabs>
+  <TabItem label='User CSS'>
+    例えば以下のようなCSSを用意するといいでしょう。
+
+    ```css
+    // style.css
+    @media (prefers-reduced-motion: no-preference) {
+      .rola-dynamic-easing {
+        --dynamic-easing: cubic-bezier(calc(0.25 + var(--rola-velocity, 0) * 0.1), calc(1 - var(--rola-velocity, 0) * 0.2), calc(0.5 + var(--rola-velocity, 0) * 0.1), 1);
+        --dynamic-duration: calc((1 + var(--rola-velocity, 0)) * 0.6s);
+        transition: var(--dynamic-property, none) var(--dynamic-duration) var(--dynamic-easing);
+      }
+
+      .rola-scrub-translate-x,
+      .rola-scrub-translate-y {
+        --scrub-value: calc(var(--scrub-start) * (1 - var(--rola-progress, 0) * var(--depth, 1)) + var(--scrub-end) * (var(--rola-progress, 0) * var(--depth, 1)));
+
+        &.rola-dynamic-easing {
+          --dynamic-property: translate;
+        }
+      }
+
+      .rola-scrub-text-clip-in {
+        color: transparent;
+        background-image: linear-gradient(90deg, var(--scrub-color-end, #000) 50%, var(--scrub-color-start, #ccc) 50%, var(--scrub-color-start, #ccc) 100%);
+        background-position: calc(100% * (1 - var(--rola-progress, 0))) 0;
+        background-clip: text;
+        background-size: 200% 100%;
+
+        &.rola-dynamic-easing {
+          --dynamic-property:  background-position;
+        }
+      }
+    }
+    ```
+
+    ```html /data-rola-velocity/ /rola-dynamic-easing/
+    // index.html
+    <p class="rola-scrub-text-clip-in rola-dynamic-easing text-large" data-rola-trigger data-rola-velocity data-rola-scrub-start="bottom" data-rola-scrub-end="top 50%">
+      Rola is a library for scroll management
+    </p>
+
+    <figure class="sticky" data-rola-trigger data-rola-velocity>
+      <img src="pizza.webp" class="rola-scrub-translate-y rola-dynamic-easing sticky-image" width="1384" height="924" alt="石窯から出てきたばかりの焼きたてマルゲリータ" decoding="async" loading="lazy">
+    </figure>
+    ```
+
+
+    <iframe src="/demo/02_scrub/scrub_04/index.html" style="min-height: 500px"></iframe>
+
+
+  </TabItem>
+  <TabItem label='Rola CSS'>
+    Rola CSSを使っている場合は、ターゲット要素に `data-rola-dynamic-easing` 属性をつけることでダイナミックイージングを設定できます。
+    なお、デュレーションは `--rola-duration` で設定できます。
+
+    ```html /data-rola-velocity/ /data-rola-dynamic-easing/
+    // index.html
+    <p class="text-large" data-rola-trigger data-rola-velocity data-rola-effect="text-clip" data-rola-dynamic-easing data-rola-scrub-start="bottom" data-rola-scrub-end="top 50%">
+      Rola is a library for scroll management
+    </p>
+
+    <figure class="sticky" data-rola-trigger data-rola-velocity>
+      <img src="pizza.webp" class="sticky-image" data-rola-effect="translate" data-rola-dynamic-easing width="1384" height="924" alt="石窯から出てきたばかりの焼きたてマルゲリータ" decoding="async" loading="lazy">
+    </figure>
+    ```
+
+    <iframe src="/demo/02_scrub/scrub_05/index.html" style="min-height: 500px"></iframe>
+  </TabItem>
+</Tabs>
+
+
+
+
+
+## ビューポートのマージン
+`rootMargin` オプションを使えば、`data-rola-inview` 属性の値（ `true` / `false` ）が切り替わるタイミングや、進行度を管理するタイミングをコントロールできます。初期値は `0px` となっており、ビューポート内に要素が少しでも入ったら `data-rola-inview` 属性が `true` になります。
+
+`rootMargin` は `IntersectionObserver` の `rootMargin` オプションと同等で CSSの `margin` プロパティのように設定します。
+
+```javascript
+// main.js
+new Rola("[data-rola-trigger]", {
+  rootMargin: "0px 0px -30%"
+});
+```
+
+上記の例では、ビューポートの1番上から、下から 30% までのエリアにトリガー要素が入った時に `data-rola-inview` 属性が `true` になります。
+
+:::note
+ `rootMargin` の詳細は、`IntersectionObserver` のドキュメントなどをご確認ください。
+
+[交差オブザーバー API | Web API | MDN](https://developer.mozilla.org/ja/docs/Web/API/Intersection_Observer_API)
+:::
+
+## ターゲット要素の変更
+
+デフォルトでは、トリガー要素に `data-rola-inview` 属性や、`--rola-progress` カスタムプロパティが付与されますが、時にはトリガー要素ではない要素をアニメーションしたい場合などもあります。その場合は トリガー要素に `data-rola-target`属性を使い、 `data-rola-inview` 属性や、`--rola-progress` カスタムプロパティを付与させたい要素（ターゲット要素）を CSSセレクタで指定します。
+
+```html /data-rola-target="#target"/
+// index.html
+<div data-rola-trigger data-rola-target="#target">...</div>
+...
+<div id="target" class="rola-scrub-translate-y">...</div>
+```
+
+これにより、トリガー要素がビューポートに入ったら、ターゲット要素の`data-rola-inview` 属性が `true` になり、`--rola-progress` カスタムプロパティによる進行管理が始まります。
+
+
+
+## JavaScriptによる操作
+
+Rola は、インスタンス作成時の第3引数にコールバック関数を持たせることができます。
+
+`scrub` オプションが有効時のコールバック関数はビューポート内でスクロール値が更新されるたびに実行されます。
+なお、`once` オプションが有効な場合には、最初にビューポートに入ったタイミングで1度だけ実行されます。
+
+
+```javascript
+// main.js
+const callback = (element, isInView, options, progress) => {
+  if (isInView) {
+    console.log(`スクラブ中`);
+  } else {
+    console.log(`スクラブ終了`);
+  }
+};
+
+new Rola("[data-rola-trigger]", { scrub: true }, callback);
+```
+
+これにより、CSSだけでは表現できないようなこともJavaScriptを使って実現できるようになります。
+
+例えば、スクロール値や進行度を画面に表示したり、[GSPA](https://gsap.com/)のようなアニメーションライブラリを使ってアニメーションを作成したりすることができます。

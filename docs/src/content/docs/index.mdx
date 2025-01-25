@@ -1,0 +1,38 @@
+---
+title: Scroll Manager Rola
+description: Get started building your docs site with Starlight.
+template: splash
+hero:
+  tagline: スクロールの管理をRolaに任せてみませんか？
+  image:
+    file: ../../assets/houston.webp
+  actions:
+    - text: はじめる
+      link: /getting-started/installation/
+      icon: right-arrow
+    - text: GitHubで見る
+      link: https://github.com/hilosiva/rola
+      icon: github
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+
+## Rolaの特徴
+
+
+<CardGrid>
+	<Card title="インビュー機能" icon="seti:ignored" data-rola-trigger>
+		要素がビューポート内に入ったかを監視する[インビュー機能](./getting-started/inview/)を使って、インビューアニメーションを手軽に作成。
+	</Card>
+	<Card title="スクラブ機能" icon="random">
+		[スクラブ機能](./getting-started/scrub/)で、ビューポート内の要素がスクロールに応じてアニメーションするスクラブアニメーションを作成可能。
+	</Card>
+	<Card title="パフォーマンス" icon="rocket">
+		最低限のオブザーバで要素を監視し、ビューポート内の全てのスクラブ要素は一度の`requestAnimationFlame`で更新。
+	</Card>
+	<Card title="CSSで自由にアニメーション" icon="seti:css">
+		Rolaはスクロールによる要素の状態をHTMLにセットすることにフォーカス。アニメーションはCSSで自由に作成可能。
+	</Card>
+</CardGrid>

@@ -1,0 +1,44 @@
+---
+title: パフォーマンス
+description: Rola は、パフォーマンスに考慮したスクロールマネジメントライブラリです。
+---
+
+import { Tabs, TabItem, Code, Steps } from '@astrojs/starlight/components';
+
+
+Rola は、パフォーマンスに考慮したスクロールマネジメントライブラリです。
+
+## オブザーバ
+
+Rola は、JavaScripの標準APIである、`IntersectionObserver` を使って、トリガー要素がビューポート内にあるかどうかを監視しています。
+
+複数の Rolaインスタンスを生成しても、`IntersectionObserver` のオプションが同じ場合は、新たな `IntersectionObserver` インスタンスは生成せずに既存のオブザーバーを利用するように設計しています。
+
+```javascript
+new Rola('[data-rola-inview-trigger]', { rootMargin: "0px 0px -30%"});
+new Rola('[data-rola-scrub-trigger]', {scrub: true, once: false rootMargin: "0% 0% -30% 0%"});
+```
+
+例えば、上記二つのRolaインスタンスは、`IntersectionObserver` に関するオプションが同じ結果のため、共通のオブザーバーを利用します。
+
+
+なお、`once` オプションが有効な場合などで、監視が必要なくなった要素はオブザーバーから削除され監視を停止します。
+
+
+また、`scrub` オプションが有効な要素は、リサイズによる進行度の変化にも対応するため、`scrub` オプションが有効な要素がビューポート内入ったタイミングで、`resizeObserver` に要素の監視を依頼し、ビューポートを出たタイミングで`resizeObserver` による監視も停止します。
+
+つまり、監視が必要な要素のみが必要なオブザーバーに登録されるように設計しています。
+
+
+## 進行管理
+
+`scrub` オプションが有効な場合には、トリガー要素がビューポート内に入ったタイミングで、`requestAnimationFlame` によるスクロール進行度の管理が始まり、ビューポートを出たタイミングで`requestAnimationFlame` を停止し進行度の管理をやめます。
+
+複数の`scrub` オプションが有効な要素がビューポート内に入っても、ひとつの`requestAnimationFlame`の処理で、全ての要素の進行度を更新を行います。
+
+なお、スクロール量や進行度に変化がない時は更新処理をスキップし、5秒以上スクロール量も進行度も変化していないアイドルタイムに突入すると、次にユーザーがスクロールを開始するまで、`requestAnimationFlame`を停止するように設計しています。
+
+また、要素の位置を取得する `getBoudingClientRect()` は、適切なタイミングで事前に呼び出し、`requestAnimationFlame` での更新処理の際には呼び出さないようにもしています。
+
+
+つまり、ビューポート内に存在している `scrub` オプションが有効な要素がスクロール中の時のみ、進行度の更新を最小限の処理で行っているため、ブラウザの負荷を抑えたスクラブ機能を提供しています。

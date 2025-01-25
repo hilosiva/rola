@@ -1,0 +1,146 @@
+---
+title: Rolaを使い始める
+description: Rola は、スクロールマネジメントライブラリです。
+---
+import { version as rolaVersion } from "../../../../../package.json";
+import { Tabs, TabItem, Code, Steps } from '@astrojs/starlight/components';
+export const version = rolaVersion
+
+
+Rola は、スクロールマネジメントライブラリです。
+
+ビューポート内の要素の監視とスクラブ機能をパフォーマンスに考慮して提供します。
+
+Rola は、 スクロールによる要素の状態を HTML の属性や CSS カスタムプロパティにセットすることにフォーカスしているため、 あとは、あなたの CSS の知見を使って自由にアニメーションを作成することが可能です。
+
+## インストール
+
+Rola をプロジェクトで利用するには、パッケージマネージャーまたは CDN でRolaをインストール/インポート します。
+<Tabs>
+<TabItem label="Package Manager">
+  <Steps>
+
+  1. お使いのパッケージマネージャーに合わせてRolaをインストール
+      <Tabs>
+        <TabItem label="npm" icon="seti:npm">
+      ```zsh
+      npm install @hilosiva/rola -D
+      ```
+        </TabItem>
+        <TabItem label="pnpm" icon="pnpm">
+      ```zsh
+      pnpm add @hilosiva/rola -D
+      ```
+        </TabItem>
+        <TabItem label="yarn" icon="seti:yarn">
+      ```zsh
+      yarn add @hilosiva/rola -D
+      ```
+        </TabItem>
+      </Tabs>
+
+
+  2. RolaをJavaScript（TypeScript）ファイルにインポート
+
+      ```javascript
+      // main.js
+      import Rola from "@hilosiva/rola";
+      ```
+
+  3. *付属のCSSを利用する場合*は、CSSファイルもインポート
+
+      [Vite](https://ja.vite.dev/)などのバンドラーを使っている場合は、CSSファイルまたは、JavaScript（TypeScript）ファイルにインポート、その他の場合は CDN で読み込む
+
+      <Tabs>
+        <TabItem label="CSS" icon="seti:css">
+      ```css
+      // style.css
+      @import "@hilosiva/rola";
+      ```
+        </TabItem>
+        <TabItem label="JavaScript" icon="seti:javascript">
+      ```javascript
+      // main.js
+      import "@hilosiva/rola/rola.css";
+      ```
+        </TabItem>
+        <TabItem label="CDN" icon="cloud-download">
+      ```html
+      // index.html
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.1.1/dist/rola.css">
+      ```
+        </TabItem>
+      </Tabs>
+  </Steps>
+</TabItem>
+<TabItem label="CDN">
+  <Steps>
+
+
+    1. HTMLの`head`要素内に Rola を読み込む
+
+        ```html
+        // index.html
+        <script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.1.1/dist/rola.min.js" defer></script>
+        ```
+
+
+    2. rola.css を使う場合は、CDNで読み込む
+
+        ```html
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.1.1/dist/rola.css">
+        ```
+
+
+  </Steps>
+</TabItem>
+</Tabs>
+
+
+## セットアップ
+
+Rolaにスクロールを監視してもらいたいHTMLの要素（トリガー要素）をセレクターにして、Rolaをインスタンス化します。
+
+```javascript
+new Rola("CSSセレクタ");
+```
+
+例えば以下のようにします。
+
+```html
+// index.html
+<div data-rola-trigger>
+  ...
+</div>
+```
+
+```javascript
+// main.js
+new Rola("[data-rola-trigger]");
+```
+
+
+これで、トリガー要素に `data-rola-inview="false"` がセットされ、トリガー要素がビューポート内に入った時に、`data-rola-inview` 属性 が `true` に切り替わります。
+
+
+
+:::note
+デベロッパーツールを開き、トリガー要素に `data-rola-inview` 属性が付与されているかを確認してください。
+`data-rola-inview` が付与されていれば、正しく Rola がセットアップできています。
+:::
+
+
+:::tip[Tips]
+デフォルトでは、`data-rola-inview` 属性がトリガー要素にセットされますが、`data-rola-inview` 属性を付与する要素（ターゲット要素）を任意の要素に変更できます。これで、トリガー要素がビューポートに入った際に、別の場所にある要素をアニメーションさせることも可能です。
+
+詳細は、[ターゲット要素の変更](http://localhost:4321/getting-started/inview#%E3%82%BF%E3%83%BC%E3%82%B2%E3%83%83%E3%83%88%E8%A6%81%E7%B4%A0%E3%81%AE%E5%A4%89%E6%9B%B4)をご確認ください。
+:::
+
+あとは、CSSに `data-rola-inview` 属性の値（ `true` / `false` ）に応じた属性セレクタを用意することで、トリガー要素が画面内に入った際に任意のアニメーションを実行するといった**インビューアニメーション**が簡単にできます。
+
+
+
+また、Rolaのオプションを使用すれば、トリガー要素が画面内に入ってから出るまでの進行度など、様々な情報をトリガー要素に付けることができるので、CSSを用意するだけで、パララックスなどの**スクラブアニメーション**も可能になります。
+
+
+さぁ、スクロールの管理を Rola に任せましょう。

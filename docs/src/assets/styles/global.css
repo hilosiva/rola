@@ -1,0 +1,43 @@
+@import "@hilosiva/rola";
+
+/* Dark mode colors. */
+:root {
+	--sl-color-accent-low: #3f1022;
+	--sl-color-accent: #c00065;
+	--sl-color-accent-high: #f3b4c6;
+	--sl-color-white: #ffffff;
+	--sl-color-gray-1: #eaeff1;
+	--sl-color-gray-2: #bdc3c6;
+	--sl-color-gray-3: #828e93;
+	--sl-color-gray-4: #505a5f;
+	--sl-color-gray-5: #303a3e;
+	--sl-color-gray-6: #15191b;
+	--sl-color-black: #15191b;
+  /* --sl-color-hairline-shade: var(--sl-color-gray-5); */
+  --sl-content-width: 54rem;
+}
+/* Light mode colors. */
+:root[data-theme='light'] {
+	--sl-color-accent-low: #f8c8d5;
+	--sl-color-accent: #c30067;
+	--sl-color-accent-high: #5c0c30;
+	--sl-color-white: #15191b;
+	--sl-color-gray-1: #1f282d;
+	--sl-color-gray-2: #303a3e;
+	--sl-color-gray-3: #505a5f;
+	--sl-color-gray-4: #828e93;
+	--sl-color-gray-5: #bdc3c6;
+	--sl-color-gray-6: #eaeff1;
+	--sl-color-gray-7: #f4f7f8;
+	--sl-color-black: #ffffff;
+  --sl-color-bg-nav: var(--sl-color-black);
+}
+
+
+iframe {
+  inline-size: 100%;
+  border: 1px solid var(--sl-color-gray-5);
+  resize: both;
+  min-inline-size: 240px;
+  min-block-size: 240px;
+}

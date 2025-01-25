@@ -1,8 +1,8 @@
-import { RolaOptions, EntryOptions, CallbackFunction } from "./types";
-import { parsePositionAttribute, parseBoolean, parseRootAttribute, parseTarget } from "./utlis/parse";
-import { getRootMargin, normalizeRootMargin } from "./utlis/rootMargin";
-import { lerp } from "./utlis/math";
 import { version } from "../../../package.json";
+import type { CallbackFunction, EntryOptions, RolaOptions } from "./types";
+import { lerp } from "./utlis/math";
+import { parseBoolean, parsePositionAttribute, parseRootAttribute, parseTarget } from "./utlis/parse";
+import { getRootMargin, normalizeRootMargin } from "./utlis/rootMargin";
 
 /**
  * Rola - A library for managing IntersectionObserver and scroll-based animations.
@@ -224,7 +224,10 @@ export default class Rola {
       const currentScrollY = window.scrollY;
       const currentScrubEntryCount = Rola.scrubEntries.size;
 
-      if (Rola.isScrubRunning && (Rola.previousScrubEntryCount !== currentScrubEntryCount || Rola.previousScrollY !== currentScrollY)) {
+      if (
+        Rola.isScrubRunning &&
+        (Rola.previousScrubEntryCount !== currentScrubEntryCount || Rola.previousScrollY !== currentScrollY)
+      ) {
         Rola.update();
 
         Rola.previousScrollY = currentScrollY;
@@ -287,9 +290,16 @@ export default class Rola {
       const smoothedVelocity = lerp(entryOptions.previousVelocity ?? velocity, velocity, smoothingFactor);
 
       if (entryOptions.previousProgress !== progress) {
-        (entryOptions.target as HTMLElement).style.setProperty(`${entryOptions.progressCustomPropertyName}`, `${progress}`);
+        (entryOptions.target as HTMLElement).style.setProperty(
+          `${entryOptions.progressCustomPropertyName}`,
+          `${progress}`,
+        );
 
-        if (entryOptions.velocityCustomProperty) (entryOptions.target as HTMLElement).style.setProperty(`${entryOptions.velocityCustomPropertyName}`, `${smoothedVelocity}`);
+        if (entryOptions.velocityCustomProperty)
+          (entryOptions.target as HTMLElement).style.setProperty(
+            `${entryOptions.velocityCustomPropertyName}`,
+            `${smoothedVelocity}`,
+          );
 
         if (callback) callback(el, Rola.isScrubRunning, entryOptions, progress);
 

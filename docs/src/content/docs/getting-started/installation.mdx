@@ -67,7 +67,7 @@ Rola をプロジェクトで利用するには、パッケージマネージャ
         <TabItem label="CDN" icon="cloud-download">
       ```html
       // index.html
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.1.1/dist/rola.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.1.2/dist/rola.css">
       ```
         </TabItem>
       </Tabs>
@@ -81,14 +81,14 @@ Rola をプロジェクトで利用するには、パッケージマネージャ
 
         ```html
         // index.html
-        <script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.1.1/dist/rola.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.1.2/dist/rola.min.js" defer></script>
         ```
 
 
     2. rola.css を使う場合は、CDNで読み込む
 
         ```html
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.1.1/dist/rola.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.1.2/dist/rola.css">
         ```
 
 
@@ -133,7 +133,7 @@ new Rola("[data-rola-trigger]");
 :::tip[Tips]
 デフォルトでは、`data-rola-inview` 属性がトリガー要素にセットされますが、`data-rola-inview` 属性を付与する要素（ターゲット要素）を任意の要素に変更できます。これで、トリガー要素がビューポートに入った際に、別の場所にある要素をアニメーションさせることも可能です。
 
-詳細は、[ターゲット要素の変更](http://localhost:4321/getting-started/inview#%E3%82%BF%E3%83%BC%E3%82%B2%E3%83%83%E3%83%88%E8%A6%81%E7%B4%A0%E3%81%AE%E5%A4%89%E6%9B%B4)をご確認ください。
+詳細は、[ターゲット要素の変更](./inview#%E3%82%BF%E3%83%BC%E3%82%B2%E3%83%83%E3%83%88%E8%A6%81%E7%B4%A0%E3%81%AE%E5%A4%89%E6%9B%B4)をご確認ください。
 :::
 
 あとは、CSSに `data-rola-inview` 属性の値（ `true` / `false` ）に応じた属性セレクタを用意することで、トリガー要素が画面内に入った際に任意のアニメーションを実行するといった**インビューアニメーション**が簡単にできます。

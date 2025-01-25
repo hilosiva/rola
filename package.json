@@ -10,6 +10,8 @@
     "build": "tsup",
     "vite": "pnpm run --filter=vite-playground dev",
     "docs:dev": "pnpm run --filter=rola-docs dev",
+    "docs:build": "pnpm run --filter=rola-docs build",
+    "docs:preview": "pnpm run --filter=rola-docs preview",
     "test": "vitest",
     "lint": "biome check .",
     "lint:fix": "biome check . --write",
@@ -45,13 +47,8 @@
       "./rola.css": "./dist/rola.css"
     }
   },
-  "files": [
-    "dist"
-  ],
-  "keywords": [
-    "scrollObserver",
-    "Scrub"
-  ],
+  "files": ["dist"],
+  "keywords": ["scrollObserver", "Scrub"],
   "repository": {
     "type": "git",
     "url": "https://github.com/hilosiva/rola"

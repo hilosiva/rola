@@ -9,12 +9,26 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Rola",
+      head: [
+        {
+          tag: "meta",
+          attrs: {
+            property: "og:image",
+            contnet: "https://hilosiva.github.io/rola/ogp.png",
+          },
+        },
+      ],
       defaultLocale: "root",
       locales: {
         root: {
           label: "日本語",
           lang: "ja",
         },
+      },
+      logo: {
+        light: "./src/assets/images/logo-rola-light.svg",
+        dark: "./src/assets/images/logo-rola-dark.svg",
+        replacesTitle: true,
       },
       customCss: ["./src/assets/styles/global.css"],
       components: {
@@ -38,6 +52,10 @@ export default defineConfig({
         {
           label: "リファレンス",
           autogenerate: { directory: "reference" },
+        },
+        {
+          label: "デモ",
+          autogenerate: { directory: "demos" },
         },
       ],
       lastUpdated: true,

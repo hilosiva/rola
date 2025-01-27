@@ -1,0 +1,77 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja" data-script-disabled>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{`${title} | Demos | Rola`}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet" />
+    <link rel="canonical" href={Astro.url} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *:before,
+    *:after {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+
+  :where(html) {
+    color-scheme: dark light;
+    font-family: "Manrope", sans-serif;
+  }
+
+  .container {
+    position: relative;
+  }
+
+  .section {
+    display: block grid;
+    place-content: center;
+    min-block-size: 100vb;
+    padding-inline: 10vi;
+    margin-inline: auto;
+  }
+
+  .text-large {
+    inline-size: fit-content;
+    font-size: clamp(2rem, 1.2683rem + 3.122vw, 4rem);
+    font-weight: 700;
+    text-wrap: balance;
+    text-align: center;
+  }
+
+  .box {
+    display: block grid;
+    place-content: center;
+    inline-size: 200px;
+    block-size: 200px;
+    margin: auto;
+    background-color: #000;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    box-shadow: 0 0 4px rgb(255 255 255 / 0.2);
+  }
+</style>

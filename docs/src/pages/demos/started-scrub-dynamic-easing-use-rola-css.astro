@@ -1,0 +1,81 @@
+---
+import DemoHeader from "../../components/DemoHeader.astro";
+import DemoLayout from "../../layouts/DemoLayout.astro";
+
+const title = "Dynamic Easing using Rola CSS";
+---
+
+<DemoLayout title={title}>
+  <div class="container">
+    <DemoHeader title={title} />
+
+    <div class="stack">
+      <div class="section">
+        <p class="text-large" data-rola-trigger data-rola-velocity data-rola-effect="text-clip" data-rola-dynamic-easing data-rola-scrub-start="bottom" data-rola-scrub-end="top 50%">
+          Rola is a scroll manager.
+        </p>
+      </div>
+      <figure class="sticky" data-rola-trigger data-rola-velocity>
+        <img
+          src="/rola/pizza.webp"
+          class="sticky-image"
+          data-rola-effect="translate"
+          data-rola-dynamic-easing
+          width="1384"
+          height="924"
+          alt="石窯から出てきたばかりの焼きたてマルゲリータ"
+          decoding="async"
+          loading="lazy"
+        />
+      </figure>
+    </div>
+  </div>
+</DemoLayout>
+
+<style>
+  @import "@hilosiva/rola";
+
+  .stack {
+    display: block grid;
+    grid-template: "stack" 200vb / 1fr;
+    align-items: start;
+  }
+
+  .section {
+    grid-area: stack;
+    padding-inline: 0;
+    margin-inline: 0;
+    background-color: light-dark(white, #15191b);
+  }
+
+  .sticky {
+    grid-area: stack;
+    position: sticky;
+    inset-block-start: 0;
+    z-index: -1;
+    block-size: 100vb;
+  }
+
+  .sticky-image {
+    --rola-effect-y-start: 300px;
+    --rola-effect-y-end: 0px;
+
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .text-large {
+    --scrub-color-start: light-dark(#ccc, #333);
+    --scrub-color-end: light-dark(#000, #fff);
+  }
+</style>
+
+<script>
+  import Rola from "@hilosiva/rola";
+
+  new Rola("[data-rola-trigger]", {
+    root: document, // iFrame内で利用するため
+    scrub: true,
+  });
+</script>

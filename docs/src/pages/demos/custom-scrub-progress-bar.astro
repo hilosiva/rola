@@ -1,0 +1,46 @@
+---
+import DemoHeader from "../../components/DemoHeader.astro";
+import DemoLayout from "../../layouts/DemoLayout.astro";
+
+const title = "Progress bar for Scrub";
+---
+
+<DemoLayout title={title}>
+  <div class="container" data-rola-trigger data-rola-scrub-start="top top" data-rola-scrub-end="bottom bottom">
+    <DemoHeader title={title} />
+
+    <div class="section">
+      <p class="text-large">Rola is a scroll manager.</p>
+    </div>
+  </div>
+</DemoLayout>
+
+<style>
+  @import "@hilosiva/rola";
+
+  .container {
+    position: relative;
+    padding-block-start: 4px;
+
+    &::before {
+      content: "";
+      position: fixed;
+      z-index: 1;
+      inset-block-start: 0;
+      inset-inline: 0;
+      block-size: 4px;
+      background-image: linear-gradient(90deg, rgb(131 58 180) 0%, rgb(253 29 29) 50%, rgb(252 176 69) 100%);
+      scale: var(--rola-progress, 0) 1;
+      transform-origin: left center;
+    }
+  }
+</style>
+
+<script>
+  import Rola from "@hilosiva/rola";
+
+  new Rola("[data-rola-trigger]", {
+    root: document, // iFrame内で利用するため
+    scrub: true,
+  });
+</script>

@@ -1,0 +1,55 @@
+---
+title: カスタム
+description: A reference page in my new Starlight docs site.
+---
+
+import { Tabs, TabItem, Code, Steps } from '@astrojs/starlight/components';
+
+CSSをカスタムして使ったデモです。
+
+
+## スクラブ
+
+### Progress bar
+<iframe src="/rola/demos/custom-scrub-progress-bar" style="min-height: 480px"></iframe>
+
+<Tabs>
+  <TabItem label="HTML" icon='seti:html'>
+    ```html title="index.html"
+    <div class="container"
+      data-rola-trigger
+      data-rola-scrub-start="top top"
+      data-rola-scrub-end="bottom bottom"
+    >
+      ...
+    </div>
+    ```
+  </TabItem>
+  <TabItem label="CSS" icon='seti:css'>
+    ```css title="style.css"
+    .container {
+      position: relative;
+      padding-block-start: 4px;
+
+      &::before {
+        content: "";
+        position: fixed;
+        z-index: 1;
+        inset-block-start: 0;
+        inset-inline: 0;
+        block-size: 4px;
+        background-image: linear-gradient(90deg, rgb(131 58 180) 0%, rgb(253 29 29) 50%, rgb(252 176 69) 100%);
+        scale: var(--rola-progress, 0) 1;
+        transform-origin: left center;
+      }
+    }
+    ```
+  </TabItem>
+  <TabItem label="JavaScript" icon='seti:javascript'>
+    ```javascript title="main.js"
+    new Rola("[data-rola-trigger]", {
+      scrub: true
+    });
+    ```
+  </TabItem>
+</Tabs>

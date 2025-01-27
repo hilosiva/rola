@@ -60,18 +60,43 @@
 
 @media (prefers-reduced-motion: no-preference) {
   [data-rola-dynamic-easing] {
-    --rola-dynamic-easing: cubic-bezier(calc(0.25 + var(--rola-velocity, 0) * 0.1), calc(1 - var(--rola-velocity, 0) * 0.2), calc(0.5 + var(--rola-velocity, 0) * 0.1), 1);
+    --rola-dynamic-easing: cubic-bezier(
+      calc(0.25 + var(--rola-velocity, 0) * 0.1),
+      calc(1 - var(--rola-velocity, 0) * 0.2),
+      calc(0.5 + var(--rola-velocity, 0) * 0.1),
+      1
+    );
     --rola-dynamic-duration: calc((1 + var(--rola-velocity, 0)) * var(--rola-duration, 0.6s));
     transition: var(--rola-dynamic-property, none) var(--rola-dynamic-duration) var(--rola-dynamic-easing);
   }
 
   [data-rola-effect] {
-    --rola-progress-start: calc(1 - var(--rola-progress, 1) * var(--rola-depth, 1));
-    --rola-progress-end: calc(var(--rola-progress, 0) * var(--rola-depth, 1));
-    --rola-effect: calc(var(--rola-effect-start) * var(--rola-progress-start) + var(--rola-effect-end) * var(--rola-progress-end));
-    --rola-effect-x: calc(var(--rola-effect-x-start) * var(--rola-progress-start) + var(--rola-effect-x-end) * var(--rola-progress-end));
-    --rola-effect-y: calc(var(--rola-effect-y-start) * var(--rola-progress-start) + var(--rola-effect-y-end) * var(--rola-progress-end));
-    --rola-effect-z: calc(var(--rola-effect-z-start) * var(--rola-progress-start) + var(--rola-effect-z-end) * var(--rola-progress-end));
+    --rola-progress-start: calc(1 - var(--rola-progress) * var(--rola-depth, 1));
+    --rola-progress-end: calc(var(--rola-progress) * var(--rola-depth, 1));
+    --rola-effect: calc(
+      var(--rola-effect-start) *
+      var(--rola-progress-start) +
+      var(--rola-effect-end) *
+      var(--rola-progress-end)
+    );
+    --rola-effect-x: calc(
+      var(--rola-effect-x-start) *
+      var(--rola-progress-start) +
+      var(--rola-effect-x-end) *
+      var(--rola-progress-end)
+    );
+    --rola-effect-y: calc(
+      var(--rola-effect-y-start) *
+      var(--rola-progress-start) +
+      var(--rola-effect-y-end) *
+      var(--rola-progress-end)
+    );
+    --rola-effect-z: calc(
+      var(--rola-effect-z-start) *
+      var(--rola-progress-start) +
+      var(--rola-effect-z-end) *
+      var(--rola-progress-end)
+    );
   }
 
   [data-rola-effect="fade"] {
@@ -89,7 +114,8 @@
     --rola-effect-start: 0;
     --rola-effect-end: 1;
 
-    scale: var(--rola-effect-x, var(--rola-effect, 1)) var(--rola-effect-y, var(--rola-effect, 1)) var(--rola-effect-z, 1);
+    scale: var(--rola-effect-x, var(--rola-effect, 1)) var(--rola-effect-y, var(--rola-effect, 1))
+      var(--rola-effect-z, 1);
 
     &[data-rola-dynamic-easing] {
       --rola-dynamic-property: scale;
@@ -124,8 +150,24 @@
     background-image: linear-gradient(
       var(--rola-effect-angle, 90deg),
       var(--rola-effect-color-end, canvastext) 50%,
-      var(--rola-effect-color-start, color-mix(in srgb, var(--rola-effect-color-end, light-dark(#fff, #000)) var(--rola-effect-opacity, 50%), transparent)) 50%,
-      var(--rola-effect-color-start, color-mix(in srgb, var(--rola-effect-color-end, light-dark(#fff, #000)) var(--rola-effect-opacity, 50%), transparent)) 100%
+      var(
+          --rola-effect-color-start,
+          color-mix(
+            in srgb,
+            var(--rola-effect-color-end, light-dark(#fff, #000)) var(--rola-effect-opacity, 50%),
+            transparent
+          )
+        )
+        50%,
+      var(
+          --rola-effect-color-start,
+          color-mix(
+            in srgb,
+            var(--rola-effect-color-end, light-dark(#fff, #000)) var(--rola-effect-opacity, 50%),
+            transparent
+          )
+        )
+        100%
     );
     background-position: var(--rola-effect, 0) 0;
     background-clip: text;

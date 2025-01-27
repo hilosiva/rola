@@ -47,13 +47,8 @@
       "./rola.css": "./dist/rola.css"
     }
   },
-  "files": [
-    "dist"
-  ],
-  "keywords": [
-    "scrollObserver",
-    "Scrub"
-  ],
+  "files": ["dist"],
+  "keywords": ["scrollObserver", "Scrub"],
   "repository": {
     "type": "git",
     "url": "https://github.com/hilosiva/rola"
@@ -61,7 +56,7 @@
   "bugs": {
     "url": "https://github.com/hilosiva/rola/issues"
   },
-  "homepage": "https://github.com/hilosiva/rola",
+  "homepage": "https://hilosiva.github.io/rola/",
   "author": "Shibata Hironori",
   "license": "MIT",
   "devDependencies": {

@@ -1,0 +1,101 @@
+---
+import DemoHeader from "../../components/DemoHeader.astro";
+import DemoLayout from "../../layouts/DemoLayout.astro";
+
+const title = "scrub-start and scrub-end";
+---
+
+<DemoLayout title={title}>
+  <div class="container">
+    <DemoHeader title={title} />
+
+    <div class="stack">
+      <div class="section">
+        <p class="rola-scrub-text-clip-in text-large" data-rola-trigger data-rola-scrub-start="bottom" data-rola-scrub-end="top center">Rola is a scroll manager.</p>
+      </div>
+      <figure class="sticky" data-rola-trigger data-rola-scrub-start="0% 0%">
+        <img src="/rola/pizza.webp" class="rola-scrub-translate-y sticky-image" width="1384" height="924" alt="石窯から出てきたばかりの焼きたてマルゲリータ" decoding="async" loading="lazy" />
+      </figure>
+    </div>
+  </div>
+</DemoLayout>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .rola-scrub-fade-in {
+      opacity: var(--rola-progress, 0);
+    }
+
+    .rola-scrub-translate-x,
+    .rola-scrub-translate-y {
+      --scrub-value: calc(var(--scrub-start) * (1 - var(--rola-progress, 0) * var(--depth, 1)) + var(--scrub-end) * (var(--rola-progress, 0) * var(--depth, 1)));
+    }
+
+    .rola-scrub-translate-x {
+      --scrub-start: 0%;
+      --scrub-end: calc(100vi - 100%);
+
+      translate: var(--scrub-value);
+    }
+
+    .rola-scrub-translate-y {
+      --scrub-start: 300px;
+      --scrub-end: 0px;
+
+      translate: 0 var(--scrub-value);
+    }
+
+    .rola-scrub-clip-in {
+      clip-path: inset(calc(30% * (1 - var(--rola-progress, 0))));
+    }
+
+    .rola-scrub-text-clip-in {
+      color: transparent;
+      background-image: linear-gradient(90deg, var(--scrub-color-end, #000) 50%, var(--scrub-color-start, #ccc) 50%, var(--scrub-color-start, #ccc) 100%);
+      background-position: calc(100% * (1 - var(--rola-progress, 0))) 0;
+      background-clip: text;
+      background-size: 200% 100%;
+    }
+  }
+
+  .stack {
+    display: block grid;
+    grid-template: "stack" 200vb / 1fr;
+    align-items: start;
+  }
+
+  .section {
+    grid-area: stack;
+    padding-inline: 0;
+    margin-inline: 0;
+    background-color: light-dark(white, #15191b);
+  }
+
+  .sticky {
+    grid-area: stack;
+    position: sticky;
+    inset-block-start: 0;
+    z-index: -1;
+    block-size: 100vb;
+  }
+
+  .sticky-image {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .text-large {
+    --scrub-color-start: light-dark(#ccc, #333);
+    --scrub-color-end: light-dark(#000, #fff);
+  }
+</style>
+
+<script>
+  import Rola from "@hilosiva/rola";
+
+  new Rola("[data-rola-trigger]", {
+    root: document, // iFrame内で利用するため
+    scrub: true,
+  });
+</script>

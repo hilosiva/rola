@@ -1,0 +1,165 @@
+---
+title: ベーシック
+description: A reference page in my new Starlight docs site.
+---
+
+import { Tabs, TabItem, Code, Steps } from '@astrojs/starlight/components';
+
+rola.css を使ったベーシックなデモです。
+
+
+## インビュー
+### Fade in
+
+<iframe src="/rola/demos/basic-inview-fade" style="min-height: 480px"></iframe>
+
+<Tabs>
+  <TabItem label="HTML" icon='seti:html'>
+    ```html title="index.html"
+    <p data-rola-trigger data-rola-transition="fade">
+      Rola is a scroll manager.
+    </p>
+    ```
+  </TabItem>
+  <TabItem label="CSS" icon='seti:css'>
+    ```css title="style.css"
+    .text-large {
+      text-align: center;
+      text-wrap: balance;
+      font-size: clamp(1.125rem, 0.5rem + 3.125vw, 2rem);
+      font-weight: 700;
+    }
+    ```
+  </TabItem>
+  <TabItem label="JavaScript" icon='seti:javascript'>
+    ```javascript title="main.js"
+    new Rola("[data-rola-trigger]", {
+      rootMargin: "0% 0% -30%"
+    });
+    ```
+  </TabItem>
+</Tabs>
+
+
+
+## スクラブ
+
+### Text Clip
+<iframe src="/rola/demos/basic-scrub-text-clip" style="min-height: 480px"></iframe>
+
+<Tabs>
+  <TabItem label="HTML" icon='seti:html'>
+    ```html title="index.html"
+    <p class="text-large"
+      data-rola-trigger
+      data-rola-effect="text-clip"
+      data-rola-scrub-start="bottom bottom"
+      data-rola-scrub-end="center center"
+    >
+      Rola is a scroll manager.
+    </p>
+    ```
+  </TabItem>
+  <TabItem label="CSS" icon='seti:css'>
+    ```css title="style.css"
+    .text-large {
+      inline-size: fit-content;
+      text-align: center;
+      text-wrap: balance;
+      font-size: clamp(1.125rem, 0.5rem + 3.125vw, 2rem);
+      font-weight: 700;
+    }
+    ```
+  </TabItem>
+  <TabItem label="JavaScript" icon='seti:javascript'>
+    ```javascript title="main.js"
+    new Rola("[data-rola-trigger]", {
+      scrub: true
+    });
+    ```
+  </TabItem>
+</Tabs>
+
+### Pin Translate
+<iframe src="/rola/demos/basic-scrub-pin-translate" style="min-height: 480px"></iframe>
+
+<Tabs>
+  <TabItem label="HTML" icon='seti:html'>
+    ```html title="index.html"
+    <div class="pin-container"
+       data-rola-trigger
+       data-rola-scrub-start="top top"
+       data-rola-scrub-end="bottom bottom"
+    >
+      <div class="pin">
+        <div class="flex" data-rola-effect="translate">
+          <div class="item">
+            <p>01</p>
+          </div>
+          <div class="item">
+            <p>02</p>
+          </div>
+          <div class="item">
+            <p>03</p>
+          </div>
+          <div class="item">
+            <p>04</p>
+          </div>
+          <div class="item">
+            <p>05</p>
+          </div>
+          <div class="item">
+            <p>06</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    ```
+  </TabItem>
+  <TabItem label="CSS" icon='seti:css'>
+    ```css title="style.css"
+    .pin-container {
+      min-block-size: 300vb;
+    }
+
+    .pin {
+      --offset: 10vi;
+
+      position: sticky;
+      inset-block-start: 0;
+      display: block grid;
+      align-content: center;
+      min-block-size: 100vb;
+      padding-inline: var(--offset);
+      overflow: hidden;
+    }
+
+    .flex {
+      --rola-effect-x-start: 0%;
+      --rola-effect-x-end: calc(-100% + (100vi - var(--offset) * 2));
+
+      display: block flex;
+      column-gap: 2rem;
+      align-items: center;
+    }
+
+    .item {
+      display: block grid;
+      place-content: center;
+      flex-shrink: 0;
+      inline-size: 200px;
+      aspect-ratio: 1;
+      border: 1px solid;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    ```
+  </TabItem>
+  <TabItem label="JavaScript" icon='seti:javascript'>
+    ```javascript title="main.js"
+    new Rola("[data-rola-trigger]", {
+      scrub: true
+    });
+    ```
+  </TabItem>
+</Tabs>

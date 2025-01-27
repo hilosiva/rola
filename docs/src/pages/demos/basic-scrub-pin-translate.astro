@@ -1,0 +1,89 @@
+---
+import DemoHeader from "../../components/DemoHeader.astro";
+import DemoLayout from "../../layouts/DemoLayout.astro";
+
+const title = "Basic Pin translate for Scrub";
+---
+
+<DemoLayout title={title}>
+  <div class="container">
+    <DemoHeader title={title} />
+
+    <div class="pin-container" data-rola-trigger data-rola-scrub-start="top top" data-rola-scrub-end="bottom bottom">
+      <div class="pin">
+        <div class="flex" data-rola-effect="translate">
+          <div class="item">
+            <p>01</p>
+          </div>
+          <div class="item">
+            <p>02</p>
+          </div>
+          <div class="item">
+            <p>03</p>
+          </div>
+          <div class="item">
+            <p>04</p>
+          </div>
+          <div class="item">
+            <p>05</p>
+          </div>
+          <div class="item">
+            <p>06</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <p class="text-large">Rola is a scroll manager.</p>
+  </div>
+</DemoLayout>
+
+<style>
+  @import "@hilosiva/rola";
+
+  .pin-container {
+    min-block-size: 300vb;
+  }
+
+  .pin {
+    --offset: 10vi;
+
+    position: sticky;
+    inset-block-start: 0;
+    display: block grid;
+    align-content: center;
+    min-block-size: 100vb;
+    padding-inline: var(--offset);
+    overflow: hidden;
+  }
+
+  .flex {
+    --rola-effect-x-start: 0%;
+    --rola-effect-x-end: calc(-100% + (100vi - var(--offset) * 2));
+
+    display: block flex;
+    column-gap: 2rem;
+    align-items: center;
+  }
+
+  .item {
+    display: block grid;
+    place-content: center;
+    flex-shrink: 0;
+    inline-size: 200px;
+    aspect-ratio: 1;
+    border: 1px solid;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+</style>
+
+<script>
+  import Rola from "@hilosiva/rola";
+
+  new Rola("[data-rola-trigger]", {
+    root: document, // iFrame内で利用するため
+    scrub: true,
+  });
+</script>

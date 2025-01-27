@@ -1,5 +1,9 @@
 # Rola
 
+![Rola](/docs/public/ogp.png)
+
+[![npm version](https://badge.fury.io/js/@hilosiva%2Frola.svg)](https://badge.fury.io/js/@hilosiva%2Frola)
+
 Rola は、スクロールマネジメントライブラリです。
 IntersectionObserver によるビューポート内の要素の監視とスクラブ機能をパフォーマンスに考慮して提供します。
 

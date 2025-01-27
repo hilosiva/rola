@@ -113,10 +113,10 @@ new Rola("[data-rola-trigger]", {
 
     これで、以下のようなHTMLを準備し、Rolaをインスタンス化するとスクラブアニメーションが可能です。
 
-    ```html /rola-scrub-text-clip-in/ /rola-scrub-translate-y/
+    ```html ins="rola-scrub-text-clip-in" ins="rola-scrub-translate-y"
     // index.html
     <p class="rola-scrub-text-clip-in text-large" data-rola-trigger>
-      Rola is a library for scroll management
+      Rola is a scroll manager.
     </p>
 
     <figure class="sticky" data-rola-trigger>
@@ -134,27 +134,34 @@ new Rola("[data-rola-trigger]", {
 
 
 
-    <iframe src="/rola/demo/02_scrub/scrub_01/index.html" style="min-height: 500px"></iframe>
+    <iframe src="/rola/demos/started-scrub" style="min-height: 480px"></iframe>
+
 
   </TabItem>
   <TabItem label="Rola CSS">
     rola.css を読み込んでいる場合は、ターゲット要素に `data-rola-effect` 属性を付けるだけで手軽にスクラブアニメーションが利用できます。
 
-    ```html ins="data-rola-effect=\"text-clip\""
+    ```html ins="data-rola-effect=\"text-clip\"" ins="data-rola-effect=\"translate\""
     // index.html
     <p data-rola-trigger data-rola-effect="text-clip">
-      Rola is a library for scroll management
+     Rola is a scroll manager.
     </p>
+
+    <figure class="sticky" data-rola-trigger>
+      <img src="pizza.webp" class="sticky-image" data-rola-effect="translate" width="1384" height="924" alt="石窯から出てきたばかりの焼きたてマルゲリータ" decoding="async" loading="lazy" />
+    </figure>
     ```
 
 
     ```javascript
     // main.js
-    new Rola("[data-rola-trigger]");
+    new Rola("[data-rola-trigger]", {
+      scrub: true
+    });
     ```
 
 
-     <iframe src="/rola/demo/02_scrub/scrub_02/index.html" style="min-height: 500px"></iframe>
+    <iframe src="/rola/demos/started-scrub-use-rola-css" style="min-height: 480px"></iframe>
 
     利用できる属性値は以下のとおりで、進行度によるスタイルの状態は、ご自身のCSSで上書きも可能ですが、これらを変更できるカスタムプロパティも用意しています。
 
@@ -269,7 +276,7 @@ Rolaのスクラブ機能のデフォルトは、トリガー要素の上部が�
 
 ```html /data-rola-scrub-start="bottom"/ /data-rola-scrub-end="top center"/ /data-rola-scrub-start="0% 0%"/
 <p class="rola-scrub-text-clip-in text-large" data-rola-trigger data-rola-scrub-start="bottom" data-rola-scrub-end="top center">
-  Rola is a library for scroll management
+  Rola is a scroll manager.
 </p>
 
 <figure class="sticky" data-rola-trigger data-rola-scrub-start="0% 0%">
@@ -277,7 +284,7 @@ Rolaのスクラブ機能のデフォルトは、トリガー要素の上部が�
 </figure>
 ```
 
-<iframe src="/rola/demo/02_scrub/scrub_03/index.html" style="min-height: 500px"></iframe>
+<iframe src="/rola/demos/started-scrub-start-end" style="min-height: 480px"></iframe>
 
 例えば上記の例では、`p`要素には `data-rola-scrub-start` 属性に `bottom` が指定されています。
 値がひとつのため、ビューポートの基準点は規定値の `bottom` となります
@@ -363,7 +370,7 @@ new Rola("[data-rola-trigger]", {
     ```html /data-rola-velocity/ /rola-dynamic-easing/
     // index.html
     <p class="rola-scrub-text-clip-in rola-dynamic-easing text-large" data-rola-trigger data-rola-velocity data-rola-scrub-start="bottom" data-rola-scrub-end="top 50%">
-      Rola is a library for scroll management
+      Rola is a scroll manager.
     </p>
 
     <figure class="sticky" data-rola-trigger data-rola-velocity>
@@ -372,7 +379,7 @@ new Rola("[data-rola-trigger]", {
     ```
 
 
-    <iframe src="/rola/demo/02_scrub/scrub_04/index.html" style="min-height: 500px"></iframe>
+    <iframe src="/rola/demos/started-scrub-dynamic-easing" style="min-height: 480px"></iframe>
 
 
   </TabItem>
@@ -383,7 +390,7 @@ new Rola("[data-rola-trigger]", {
     ```html /data-rola-velocity/ /data-rola-dynamic-easing/
     // index.html
     <p class="text-large" data-rola-trigger data-rola-velocity data-rola-effect="text-clip" data-rola-dynamic-easing data-rola-scrub-start="bottom" data-rola-scrub-end="top 50%">
-      Rola is a library for scroll management
+      Rola is a scroll manager.
     </p>
 
     <figure class="sticky" data-rola-trigger data-rola-velocity>
@@ -391,7 +398,7 @@ new Rola("[data-rola-trigger]", {
     </figure>
     ```
 
-    <iframe src="/rola/demo/02_scrub/scrub_05/index.html" style="min-height: 500px"></iframe>
+      <iframe src="/rola/demos/started-scrub-dynamic-easing-use-rola-css" style="min-height: 480px"></iframe>
   </TabItem>
 </Tabs>
 

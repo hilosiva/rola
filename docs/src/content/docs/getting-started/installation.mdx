@@ -4,7 +4,10 @@ description: Rola は、スクロールマネジメントライブラリです�
 ---
 import { version as rolaVersion } from "../../../../../package.json";
 import { Tabs, TabItem, Code, Steps } from '@astrojs/starlight/components';
+
 export const version = rolaVersion
+export const cdnScript = `<script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@${version}/dist/rola.min.js" defer></script>`
+export const cdnCss = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hilosiva/rola@${version}/dist/rola.css">`
 
 
 Rola は、スクロールマネジメントライブラリです。
@@ -65,10 +68,9 @@ Rola をプロジェクトで利用するには、パッケージマネージャ
       ```
         </TabItem>
         <TabItem label="CDN" icon="cloud-download">
-      ```html
-      // index.html
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.1.2/dist/rola.css">
-      ```
+
+          <Code code={cdnCss} lang="html" title="index.html" />
+
         </TabItem>
       </Tabs>
   </Steps>
@@ -79,18 +81,12 @@ Rola をプロジェクトで利用するには、パッケージマネージャ
 
     1. HTMLの`head`要素内に Rola を読み込む
 
-        ```html
-        // index.html
-        <script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.1.2/dist/rola.min.js" defer></script>
-        ```
+        <Code code={cdnScript} lang="html" title="index.html" />
 
 
     2. rola.css を使う場合は、CDNで読み込む
 
-        ```html
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.1.2/dist/rola.css">
-        ```
-
+        <Code code={cdnCss} lang="html" title="index.html" />
 
   </Steps>
 </TabItem>

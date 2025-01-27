@@ -14,7 +14,7 @@ export default defineConfig({
           tag: "meta",
           attrs: {
             property: "og:image",
-            contnet: "https://hilosiva.github.io/rola/ogp.png",
+            content: "https://hilosiva.github.io/rola/ogp.png",
           },
         },
       ],

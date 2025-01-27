@@ -49,7 +49,7 @@
   --rola-property: opacity, translate;
 
   &[data-rola-inview="false"] {
-    translate: var(--rola-slide-start-x, 0) var(--rola-slide-start-y, 4rem);
+    translate: var(--rola-slide-start-x, 0) var(--rola-slide-start-y, 2rem);
     opacity: var(--rola-opacity-start, 0);
   }
   &[data-rola-inview="true"] {
@@ -71,8 +71,8 @@
   }
 
   [data-rola-effect] {
-    --rola-progress-start: calc(1 - var(--rola-progress) * var(--rola-depth, 1));
-    --rola-progress-end: calc(var(--rola-progress) * var(--rola-depth, 1));
+    --rola-progress-start: calc(1 - var(--rola-progress, 1) * var(--rola-depth, 1));
+    --rola-progress-end: calc(var(--rola-progress, 0) * var(--rola-depth, 1));
     --rola-effect: calc(
       var(--rola-effect-start) *
       var(--rola-progress-start) +
@@ -119,6 +119,20 @@
 
     &[data-rola-dynamic-easing] {
       --rola-dynamic-property: scale;
+    }
+  }
+
+  [data-rola-effect="image-position"] {
+    --rola-effect-y-start: 100%;
+    --rola-effect-y-end: 0%;
+
+    inline-size: calc(100% * var(--rola-effect-scale, 1.3));
+    block-size: calc(100% * var(--rola-effect-scale, 1.3));
+    object-fit: cover;
+    object-position: var(--rola-effect-x, center) var(--rola-effect-y, center);
+
+    &[data-rola-dynamic-easing] {
+      --rola-dynamic-property: object-position;
     }
   }
 

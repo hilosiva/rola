@@ -202,22 +202,20 @@ new Rola("[data-rola-trigger]", {
       }
       ```
 
-    - `translate`
+    - `image-position`
 
       | カスタムプロパティ     | 役割                           | デフォルト値                     | 型                  |
       | ---------------------- | ------------------------------ | -------------------------------- | ------------------- |
-      | `--rola-effect-x-start` | アニメーション開始時の水平方向の `translate` | – | `<length-percentage>` |
-      | `--rola-effect-x-end` | アニメーション終了時の水平方向の `translate` | – | `<length-percentage>` |
-      | `--rola-effect-y-start` | アニメーション開始時の垂直方向の `translate` | – | `<length-percentage>` |
-      | `--rola-effect-y-end` | アニメーション終了時の垂直方向の `translate` | – | `<length-percentage>` |
-      | `--rola-effect-z-start` | アニメーション開始時のZ軸方向の `translate` | – | `<length>` |
-      | `--rola-effect-z-end` | アニメーション終了時のZ軸方向の `translate` | – | `<length>` |
+      | `--rola-effect-x-start` | アニメーション開始時の水平方向の `object-position` | `center` | `<position>` |
+      | `--rola-effect-x-end` | アニメーション終了時の水平方向の `object-position` | `center` | `<position>` |
+      | `--rola-effect-y-start` | アニメーション開始時の垂直方向の `object-position` | `100%` | `<position>` |
+      | `--rola-effect-y-end` | アニメーション終了時の垂直方向の `object-position` | `0%` | `<position>` |
+      | `--rola-effect-scale` | 画像の拡大倍率 `1.3` | `1.3` | `<number>` |
 
           ```css
       // style.css
-      [data-rola-effect="translate"] {
-        --rola-effect-x-start: -200px;
-        --rola-effect-x-end: 0;
+      [data-rola-effect="image-position"] {
+        --rola-effect-scale: 1.5;
       }
       ```
 
@@ -254,6 +252,25 @@ new Rola("[data-rola-trigger]", {
       }
       ```
 
+
+    - `translate`
+
+      | カスタムプロパティ     | 役割                           | デフォルト値                     | 型                  |
+      | ---------------------- | ------------------------------ | -------------------------------- | ------------------- |
+      | `--rola-effect-x-start` | アニメーション開始時の水平方向の `translate` | – | `<length-percentage>` |
+      | `--rola-effect-x-end` | アニメーション終了時の水平方向の `translate` | – | `<length-percentage>` |
+      | `--rola-effect-y-start` | アニメーション開始時の垂直方向の `translate` | – | `<length-percentage>` |
+      | `--rola-effect-y-end` | アニメーション終了時の垂直方向の `translate` | – | `<length-percentage>` |
+      | `--rola-effect-z-start` | アニメーション開始時のZ軸方向の `translate` | – | `<length>` |
+      | `--rola-effect-z-end` | アニメーション終了時のZ軸方向の `translate` | – | `<length>` |
+
+          ```css
+      // style.css
+      [data-rola-effect="translate"] {
+        --rola-effect-x-start: -200px;
+        --rola-effect-x-end: 0;
+      }
+      ```
 
   </TabItem>
 </Tabs>

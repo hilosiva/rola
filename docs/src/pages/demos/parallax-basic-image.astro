@@ -1,0 +1,91 @@
+---
+import DemoHeader from "../../components/DemoHeader.astro";
+import DemoLayout from "../../layouts/DemoLayout.astro";
+
+const title = "Image parallax";
+---
+
+<DemoLayout title={title}>
+  <div class="container">
+    <div class="stack">
+      <DemoHeader title={title} />
+      <figure class="sticky" data-rola-trigger>
+        <img
+          src="/rola/mountain.webp"
+          class="sticky-image"
+          data-rola-effect="translate"
+          width="2000"
+          height="1308"
+          alt="夕暮れ時、白い大きな岩の横から見渡す山々。遠くに日が沈もうとしている。"
+          decoding="async"
+          loading="lazy"
+        />
+      </figure>
+      <div class="mask" data-rola-trigger data-rola-scrub-start="top -10%">
+        <img src="/rola/mask.svg" class="mask-image" data-rola-effect="translate" width="1200" height="675" alt="" decoding="async" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</DemoLayout>
+
+<style>
+  @import "@hilosiva/rola";
+
+  .stack {
+    display: block grid;
+    grid-template:
+      "stack" 100vb
+      "mask" 200vb / 1fr;
+    align-items: start;
+  }
+
+  :global(.header) {
+    grid-area: stack;
+    background-color: light-dark(white, #15191b);
+  }
+
+  .sticky {
+    grid-area: stack;
+    position: sticky;
+    inset-block-start: 0;
+    z-index: -1;
+    block-size: 100vb;
+  }
+
+  .sticky-image {
+    --rola-effect-y-start: 300px;
+    --rola-effect-y-end: 0px;
+
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .mask {
+    grid-area: mask;
+    position: sticky;
+    z-index: 1;
+    inset-block-start: 0;
+    block-size: 100vb;
+    overflow: hidden;
+    perspective: 1000px;
+  }
+
+  .mask-image {
+    --rola-effect-z-start: 1000px;
+    --rola-effect-z-end: 0px;
+
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+</style>
+
+<script>
+  import Rola from "@hilosiva/rola";
+
+  new Rola("[data-rola-trigger]", {
+    root: document, // iFrame内で利用するため
+    scrub: true,
+  });
+</script>

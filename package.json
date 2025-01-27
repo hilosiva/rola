@@ -1,6 +1,6 @@
 {
   "name": "@hilosiva/rola",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Rola is JavaScript library for managing IntersectionObserver and scroll-based animations.",
   "type": "module",
   "main": "dist/index.js",
@@ -47,8 +47,13 @@
       "./rola.css": "./dist/rola.css"
     }
   },
-  "files": ["dist"],
-  "keywords": ["scrollObserver", "Scrub"],
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "scrollObserver",
+    "Scrub"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/hilosiva/rola"

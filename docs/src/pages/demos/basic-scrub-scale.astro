@@ -1,0 +1,29 @@
+---
+import DemoHeader from "../../components/DemoHeader.astro";
+import DemoLayout from "../../layouts/DemoLayout.astro";
+
+const title = "Basic Scale for Scrub";
+---
+
+<DemoLayout title={title}>
+  <div class="container">
+    <DemoHeader title={title} />
+
+    <div class="section">
+      <p class="text-large" data-rola-trigger data-rola-effect="scale" data-rola-scrub-start="bottom bottom" data-rola-scrub-end="center center">Rola is a scroll manager.</p>
+    </div>
+  </div>
+</DemoLayout>
+
+<style>
+  @import "@hilosiva/rola";
+</style>
+
+<script>
+  import Rola from "@hilosiva/rola";
+
+  new Rola("[data-rola-trigger]", {
+    root: document, // iFrame内で利用するため
+    scrub: true,
+  });
+</script>

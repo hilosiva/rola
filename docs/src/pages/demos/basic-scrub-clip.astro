@@ -1,0 +1,44 @@
+---
+import DemoHeader from "../../components/DemoHeader.astro";
+import DemoLayout from "../../layouts/DemoLayout.astro";
+
+const title = "Basic Clip for Scrub";
+---
+
+<DemoLayout title={title}>
+  <div class="container">
+    <DemoHeader title={title} />
+
+    <figure class="cover" data-rola-trigger data-rola-effect="clip" data-rola-scrub-end="top top">
+      <img src="/rola/pizza.webp" class="cover-image" width="1384" height="924" alt="石窯から出てきたばかりの焼きたてマルゲリータ" decoding="async" loading="lazy" />
+    </figure>
+
+    <div class="section">
+      <p class="text-large">Rola is a scroll manager.</p>
+    </div>
+  </div>
+</DemoLayout>
+
+<style>
+  @import "@hilosiva/rola";
+
+  .cover {
+    block-size: 100vb;
+    overflow: hidden;
+  }
+
+  .cover-image {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+</style>
+
+<script>
+  import Rola from "@hilosiva/rola";
+
+  new Rola("[data-rola-trigger]", {
+    root: document, // iFrame内で利用するため
+    scrub: true,
+  });
+</script>

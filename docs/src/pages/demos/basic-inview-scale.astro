@@ -1,0 +1,32 @@
+---
+import DemoHeader from "../../components/DemoHeader.astro";
+import DemoLayout from "../../layouts/DemoLayout.astro";
+
+const title = "Basic Scale for Invew";
+---
+
+<DemoLayout title={title}>
+  <div class="container">
+    <DemoHeader title={title} />
+
+    <div class="section">
+      <p class="text-large popup" data-rola-trigger data-rola-transition="scale">Rola is a scroll manager.</p>
+    </div>
+  </div>
+</DemoLayout>
+
+<style>
+  @import "@hilosiva/rola";
+  .popup {
+    --rola-easing: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+</style>
+
+<script>
+  import Rola from "@hilosiva/rola";
+
+  new Rola("[data-rola-trigger]", {
+    root: document, // iFrame内で利用するため
+    rootMargin: "0% 0% -30%",
+  });
+</script>

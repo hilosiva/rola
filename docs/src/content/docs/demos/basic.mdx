@@ -5,18 +5,80 @@ description: A reference page in my new Starlight docs site.
 
 import { Tabs, TabItem, Code, Steps } from '@astrojs/starlight/components';
 
-rola.css を使ったベーシックなデモです。
+`rola.css` を使ったベーシックなデモです。
 
 
 ## インビュー
-### Fade in
+### Fade
 
 <iframe src="/rola/demos/basic-inview-fade" style="min-height: 480px"></iframe>
 
 <Tabs>
   <TabItem label="HTML" icon='seti:html'>
     ```html title="index.html"
-    <p data-rola-trigger data-rola-transition="fade">
+    <p class="text-large" data-rola-trigger data-rola-transition="fade">
+      Rola is a scroll manager.
+    </p>
+    ```
+  </TabItem>
+  <TabItem label="CSS" icon='seti:css'>
+    ```css title="style.css"
+    .text-large {
+      text-align: center;
+      text-wrap: balance;
+      font-size: clamp(1.125rem, 0.5rem + 3.125vw, 2rem);
+      font-weight: 700;
+    }
+    ```
+  </TabItem>
+  <TabItem label="JavaScript" icon='seti:javascript'>
+    ```javascript title="main.js"
+    new Rola("[data-rola-trigger]", {
+      rootMargin: "0% 0% -30%"
+    });
+    ```
+  </TabItem>
+</Tabs>
+
+### Blur
+
+<iframe src="/rola/demos/basic-inview-blur" style="min-height: 480px"></iframe>
+
+<Tabs>
+  <TabItem label="HTML" icon='seti:html'>
+    ```html title="index.html"
+    <p class="text-large" data-rola-trigger data-rola-transition="blur">
+      Rola is a scroll manager.
+    </p>
+    ```
+  </TabItem>
+  <TabItem label="CSS" icon='seti:css'>
+    ```css title="style.css"
+    .text-large {
+      text-align: center;
+      text-wrap: balance;
+      font-size: clamp(1.125rem, 0.5rem + 3.125vw, 2rem);
+      font-weight: 700;
+    }
+    ```
+  </TabItem>
+  <TabItem label="JavaScript" icon='seti:javascript'>
+    ```javascript title="main.js"
+    new Rola("[data-rola-trigger]", {
+      rootMargin: "0% 0% -30%"
+    });
+    ```
+  </TabItem>
+</Tabs>
+
+### Slide
+
+<iframe src="/rola/demos/basic-inview-slide" style="min-height: 480px"></iframe>
+
+<Tabs>
+  <TabItem label="HTML" icon='seti:html'>
+    ```html title="index.html"
+    <p class="text-large" data-rola-trigger data-rola-transition="slide">
       Rola is a scroll manager.
     </p>
     ```
@@ -41,8 +103,116 @@ rola.css を使ったベーシックなデモです。
 </Tabs>
 
 
+### Scale
+
+<iframe src="/rola/demos/basic-inview-scale" style="min-height: 480px"></iframe>
+
+<Tabs>
+  <TabItem label="HTML" icon='seti:html'>
+    ```html title="index.html"
+    <p class="text-large popup" data-rola-trigger data-rola-transition="scale">
+      Rola is a scroll manager.
+    </p>
+    ```
+  </TabItem>
+  <TabItem label="CSS" icon='seti:css'>
+    ```css title="style.css"
+    .popup {
+      --rola-easing: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .text-large {
+      text-align: center;
+      text-wrap: balance;
+      font-size: clamp(1.125rem, 0.5rem + 3.125vw, 2rem);
+      font-weight: 700;
+    }
+    ```
+  </TabItem>
+  <TabItem label="JavaScript" icon='seti:javascript'>
+    ```javascript title="main.js"
+    new Rola("[data-rola-trigger]", {
+      rootMargin: "0% 0% -30%"
+    });
+    ```
+  </TabItem>
+</Tabs>
+
 
 ## スクラブ
+
+### Fade
+<iframe src="/rola/demos/basic-scrub-fade" style="min-height: 480px"></iframe>
+
+<Tabs>
+  <TabItem label="HTML" icon='seti:html'>
+    ```html title="index.html"
+    <p class="text-large"
+      data-rola-trigger
+      data-rola-effect="fade"
+      data-rola-scrub-start="bottom bottom"
+      data-rola-scrub-end="center center"
+    >
+      Rola is a scroll manager.
+    </p>
+    ```
+  </TabItem>
+  <TabItem label="CSS" icon='seti:css'>
+    ```css title="style.css"
+    .text-large {
+      inline-size: fit-content;
+      text-align: center;
+      text-wrap: balance;
+      font-size: clamp(1.125rem, 0.5rem + 3.125vw, 2rem);
+      font-weight: 700;
+    }
+    ```
+  </TabItem>
+  <TabItem label="JavaScript" icon='seti:javascript'>
+    ```javascript title="main.js"
+    new Rola("[data-rola-trigger]", {
+      scrub: true
+    });
+    ```
+  </TabItem>
+</Tabs>
+
+### Scale
+<iframe src="/rola/demos/basic-scrub-scale" style="min-height: 480px"></iframe>
+
+<Tabs>
+  <TabItem label="HTML" icon='seti:html'>
+    ```html title="index.html"
+    <p class="text-large"
+      data-rola-trigger
+      data-rola-effect="scale"
+      data-rola-scrub-start="bottom bottom"
+      data-rola-scrub-end="center center"
+    >
+      Rola is a scroll manager.
+    </p>
+    ```
+  </TabItem>
+  <TabItem label="CSS" icon='seti:css'>
+    ```css title="style.css"
+    .text-large {
+      inline-size: fit-content;
+      text-align: center;
+      text-wrap: balance;
+      font-size: clamp(1.125rem, 0.5rem + 3.125vw, 2rem);
+      font-weight: 700;
+    }
+    ```
+  </TabItem>
+  <TabItem label="JavaScript" icon='seti:javascript'>
+    ```javascript title="main.js"
+    new Rola("[data-rola-trigger]", {
+      scrub: true
+    });
+    ```
+  </TabItem>
+</Tabs>
+
 
 ### Text Clip
 <iframe src="/rola/demos/basic-scrub-text-clip" style="min-height: 480px"></iframe>
@@ -80,7 +250,73 @@ rola.css を使ったベーシックなデモです。
   </TabItem>
 </Tabs>
 
-### Pin Translate
+
+
+### Image Position
+<iframe src="/rola/demos/basic-scrub-parallax-image" style="min-height: 480px"></iframe>
+
+<Tabs>
+  <TabItem label="HTML" icon='seti:html'>
+    ```html title="index.html" /data-rola-effect="image-position"/
+    <figure class="cover" data-rola-trigger>
+      <img src="pizza.webp" data-rola-effect="image-position" width="1384" height="924" alt="石窯から出てきたばかりの焼きたてマルゲリータ" decoding="async" loading="lazy" />
+    </figure>
+    ```
+  </TabItem>
+  <TabItem label="CSS" icon='seti:css'>
+    ```css title="style.css"
+    .cover {
+      block-size: 100vb;
+      overflow: hidden;
+    }
+    ```
+  </TabItem>
+  <TabItem label="JavaScript" icon='seti:javascript'>
+    ```javascript title="main.js"
+    new Rola("[data-rola-trigger]", {
+      scrub: true
+    });
+    ```
+  </TabItem>
+</Tabs>
+
+
+### Clip
+<iframe src="/rola/demos/basic-scrub-clip" style="min-height: 480px"></iframe>
+
+<Tabs>
+  <TabItem label="HTML" icon='seti:html'>
+    ```html title="index.html"
+    <figure class="cover" data-rola-trigger data-rola-effect="clip" data-rola-scrub-end="top top">
+      <img src="pizza.webp" class="cover-image" width="1384" height="924" alt="石窯から出てきたばかりの焼きたてマルゲリータ" decoding="async" loading="lazy" />
+    </figure>
+    ```
+  </TabItem>
+  <TabItem label="CSS" icon='seti:css'>
+    ```css title="style.css"
+    .cover {
+      block-size: 100vb;
+      overflow: hidden;
+    }
+
+    .cover-image {
+      inline-size: 100%;
+      block-size: 100%;
+      object-fit: cover;
+    }
+    ```
+  </TabItem>
+  <TabItem label="JavaScript" icon='seti:javascript'>
+    ```javascript title="main.js"
+    new Rola("[data-rola-trigger]", {
+      scrub: true
+    });
+    ```
+  </TabItem>
+</Tabs>
+
+
+### Translate
 <iframe src="/rola/demos/basic-scrub-pin-translate" style="min-height: 480px"></iframe>
 
 <Tabs>

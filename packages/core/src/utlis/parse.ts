@@ -1,5 +1,5 @@
 // utils/parse.js
-import { Position } from "../types";
+import { Position, TargetConfig, TargetElement } from "../types";
 
 /**
  * Parses a position from an element.
@@ -39,11 +39,73 @@ export const parseBoolean = (el: HTMLElement, attr: string, defaultValue: boolea
 };
 
 /**
- * Parses a target element based on an attribute.
+ * Parses target elements based on targets option, target option (backward compatibility), and attribute.
  */
-export const parseTarget = (el: HTMLElement, attr: string): HTMLElement | null => {
+export const parseTargets = (
+  el: HTMLElement, 
+  attr: string, 
+  targetsOption?: (string | TargetConfig)[],
+  targetOption?: string | string[] | Element | Element[]
+): TargetElement[] => {
+  // New targets option takes highest priority
+  if (targetsOption && targetsOption.length > 0) {
+    return targetsOption.flatMap(target => {
+      if (typeof target === 'string') {
+        // String selector - no individual styles
+        return Array.from(document.querySelectorAll(target)).map(element => ({
+          element: element as HTMLElement,
+          styles: undefined
+        }));
+      } else {
+        // TargetConfig - with individual styles
+        return Array.from(document.querySelectorAll(target.selector)).map(element => ({
+          element: element as HTMLElement,
+          styles: target.styles
+        }));
+      }
+    });
+  }
+  
+  // Legacy target option (backward compatibility)
+  if (targetOption) {
+    if (typeof targetOption === 'string') {
+      return Array.from(document.querySelectorAll(targetOption)).map(element => ({
+        element: element as HTMLElement,
+        styles: undefined
+      }));
+    } else if (Array.isArray(targetOption)) {
+      if (typeof targetOption[0] === 'string') {
+        return (targetOption as string[]).flatMap(selector => 
+          Array.from(document.querySelectorAll(selector)).map(element => ({
+            element: element as HTMLElement,
+            styles: undefined
+          }))
+        );
+      } else {
+        return (targetOption as Element[]).map(element => ({
+          element: element as HTMLElement,
+          styles: undefined
+        }));
+      }
+    } else {
+      return [{
+        element: targetOption as HTMLElement,
+        styles: undefined
+      }];
+    }
+  }
+  
+  // Fall back to attribute
   const selector = el.getAttribute(attr);
-  return selector ? document.querySelector(selector) : el;
+  if (selector) {
+    return Array.from(document.querySelectorAll(selector)).map(element => ({
+      element: element as HTMLElement,
+      styles: undefined
+    }));
+  }
+  
+  // No targets specified - return empty array (trigger element will be handled separately)
+  return [];
 };
 
 /**

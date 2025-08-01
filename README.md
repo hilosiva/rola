@@ -20,7 +20,7 @@ Rolaの詳しい使い方は[ドキュメント](https://hilosiva.github.io/rola
 ### CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.1.3/dist/rola.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.2.0/dist/rola.min.js" defer></script>
 ```
 
 ### NPM
@@ -48,6 +48,58 @@ new Rola("[data-rola-trigger]");
 ```
 
 これで、トリガー要素に `data-rola-inview="false"` がセットされ、トリガー要素がビューポート内に入った時に、`data-rola-inview` が　`true` に切り替わります。
+
+## 新機能（v0.2.0）
+
+### 直接スタイル適用
+
+関数を使って動的にスタイルを適用できます：
+
+```javascript
+new Rola("[data-rola-trigger]", {
+  scrub: true,
+  styles: {
+    transform: (progress) => `translateX(${progress * 100}px)`,
+    opacity: (progress) => `${progress}`
+  }
+});
+```
+
+### 複数ターゲット
+
+複数の要素に個別のスタイルを適用できます：
+
+```javascript
+new Rola("[data-rola-trigger]", {
+  scrub: true,
+  targets: [
+    {
+      selector: ".element1",
+      styles: {
+        transform: (progress) => `translateX(${progress * 100}px)`
+      }
+    },
+    {
+      selector: ".element2", 
+      styles: {
+        opacity: (progress) => `${progress}`
+      }
+    }
+  ]
+});
+```
+
+### 改良されたコールバック
+
+オブジェクト形式でvelocity情報も利用できます：
+
+```javascript
+new Rola("[data-rola-trigger]", {
+  scrub: true
+}, ({ element, progress, velocity }) => {
+  console.log(`Progress: ${progress}, Velocity: ${velocity}`);
+});
+```
 
 
 ## ライセンス

@@ -79,6 +79,95 @@ new Rola(selector, {
 
 ---
 
+## progressCustomProperty
+
+- 型：`boolean | undefined`
+- デフォルト: `true`
+
+`false` にすると、スクラブ機能有効時でも `--rola-progress` カスタムプロパティが付与されなくなります。パフォーマンス向上に有効です。
+
+:::note
+トリガー要素に `data-rola-progress-custom-property` 属性を使うことで要素単位で切り替えることができます。
+:::
+
+---
+
+## styles
+
+- 型：`Record<string, (progress: number, velocity?: number) => string> | undefined`
+- デフォルト: `undefined`
+
+トリガー要素に直接スタイルを適用できます。関数でprogressとvelocityを受け取り、CSSの値を返します。
+
+```javascript
+new Rola("[data-trigger]", {
+  scrub: true,
+  styles: {
+    transform: (progress) => `translateX(${progress * 100}px)`,
+    opacity: (progress) => `${progress}`
+  }
+});
+```
+
+:::caution
+スクラブ機能を有効にしておく必要があります。
+:::
+
+---
+
+## target
+
+- 型：`string | string[] | Element | Element[] | undefined`
+- デフォルト: `undefined`
+
+ターゲット要素を指定します。指定された要素に `data-rola-inview` 属性やカスタムプロパティが付与されます。
+
+```javascript
+// 単一セレクタ
+new Rola("[data-trigger]", {
+  target: ".my-target"
+});
+
+// 複数セレクタ
+new Rola("[data-trigger]", {
+  target: [".target1", ".target2"]
+});
+```
+
+:::note
+HTML属性 `data-rola-target` でも指定できます。
+:::
+
+---
+
+## targets
+
+- 型：`(string | { selector: string, styles?: Record<string, (progress: number, velocity?: number) => string> })[] | undefined`
+- デフォルト: `undefined`
+
+複数のターゲット要素に個別のスタイルを適用できます。
+
+```javascript
+new Rola("[data-trigger]", {
+  scrub: true,
+  targets: [
+    {
+      selector: ".element1",
+      styles: {
+        transform: (progress) => `translateX(${progress * 100}px)`
+      }
+    },
+    ".element2" // スタイルなしも可
+  ]
+});
+```
+
+:::note
+`targets` オプションは `target` オプションより優先されます。
+:::
+
+---
+
 ## velocityCustomProperty
 
 - 型：`boolean | undefined`

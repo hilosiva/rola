@@ -1,7 +1,8 @@
 import { version } from "../../../package.json";
 import type { CallbackFunction, EntryOptions, RolaOptions } from "./types";
 import { lerp } from "./utlis/math";
-import { parseBoolean, parsePositionAttribute, parseRootAttribute, parseTarget } from "./utlis/parse";
+import { parseBoolean, parsePositionAttribute, parseRootAttribute, parseTargets } from "./utlis/parse";
+import { evaluateExpression } from "./utlis/expression";
 import { getRootMargin, normalizeRootMargin } from "./utlis/rootMargin";
 
 /**
@@ -28,6 +29,26 @@ export default class Rola {
   private static prefix = "rola";
 
   /**
+   * Calls callback function with object-style parameters.
+   */
+  private static _callCallback(
+    callback: CallbackFunction,
+    element: Element,
+    isInView: boolean,
+    options?: EntryOptions,
+    progress?: number,
+    velocity?: number
+  ) {
+    callback({
+      element,
+      isInView,
+      progress,
+      velocity,
+      options
+    });
+  }
+
+  /**
    * Observes the elements matching the selector and initializes their options.
    */
   constructor(selector: string, options?: Partial<RolaOptions>, callback?: CallbackFunction) {
@@ -44,6 +65,7 @@ export default class Rola {
       once: false,
       scrub: false,
       velocityCustomProperty: false,
+      progressCustomProperty: true,
       progressCustomPropertyName: `--${Rola.prefix}-progress`,
       velocityCustomPropertyName: `--${Rola.prefix}-velocity`,
     };
@@ -65,7 +87,13 @@ export default class Rola {
 
       Rola.entries.set(el, { entryOptions, callback });
 
-      entryOptions.target?.setAttribute(`data-${Rola.prefix}-inview`, "false");
+      // Set inview attribute on trigger element (always)
+      entryOptions.triggerElement.setAttribute(`data-${Rola.prefix}-inview`, "false");
+      
+      // Set inview attribute on target elements
+      entryOptions.targets.forEach(target => {
+        target.element.setAttribute(`data-${Rola.prefix}-inview`, "false");
+      });
 
       if (entryOptions.scrub) {
         Rola.resizeObserver?.observe(el);
@@ -87,9 +115,17 @@ export default class Rola {
       const { entryOptions, callback } = entryData;
 
       if (entry.isIntersecting) {
-        entryOptions?.target?.setAttribute(`data-${Rola.prefix}-inview`, "true");
+        // Set inview attribute on trigger element
+        entryOptions?.triggerElement.setAttribute(`data-${Rola.prefix}-inview`, "true");
+        
+        // Set inview attribute on target elements
+        entryOptions?.targets.forEach(target => {
+          target.element.setAttribute(`data-${Rola.prefix}-inview`, "true");
+        });
 
-        if (callback && !entryOptions?.scrub) callback(entry.target, true, entryOptions);
+        if (callback && !entryOptions?.scrub) {
+          Rola._callCallback(callback, entry.target, true, entryOptions);
+        }
 
         if (entryOptions?.scrub) {
           Rola._initResizeObserver();
@@ -104,9 +140,17 @@ export default class Rola {
         }
       } else {
         if (!entryOptions?.once) {
-          entryOptions?.target?.setAttribute(`data-${Rola.prefix}-inview`, "false");
+          // Set inview attribute on trigger element
+          entryOptions?.triggerElement.setAttribute(`data-${Rola.prefix}-inview`, "false");
+          
+          // Set inview attribute on target elements
+          entryOptions?.targets.forEach(target => {
+            target.element.setAttribute(`data-${Rola.prefix}-inview`, "false");
+          });
 
-          if (callback && !entryOptions?.scrub) callback(entry.target, false, entryOptions);
+          if (callback && !entryOptions?.scrub) {
+            Rola._callCallback(callback, entry.target, false, entryOptions);
+          }
         }
 
         if (entryOptions?.scrub) {
@@ -165,12 +209,15 @@ export default class Rola {
       top: rect.top + window.scrollY,
       scrub: parseBoolean(el, `data-${Rola.prefix}-scrub`, options.scrub || false),
       once: parseBoolean(el, `data-${Rola.prefix}-once`, options.once || false),
-      target: parseTarget(el, `data-${Rola.prefix}-target`),
+      triggerElement: el,
+      targets: parseTargets(el, `data-${Rola.prefix}-target`, options.targets, options.target),
       margin: getRootMargin(options.rootMargin),
       scrubRoot: parseRootAttribute(el, `data-${Rola.prefix}-scrub-root`, "element"),
       rootMargin: options.rootMargin || "0px",
       previousProgress: null,
       velocityCustomProperty: parseBoolean(el, `data-${Rola.prefix}-velocity`, options.velocityCustomProperty || false),
+      progressCustomProperty: parseBoolean(el, `data-${Rola.prefix}-progress-custom-property`, options.progressCustomProperty ?? true),
+      triggerStyles: options.styles,
       progressCustomPropertyName: options.progressCustomPropertyName,
       velocityCustomPropertyName: options.velocityCustomPropertyName,
     };
@@ -290,18 +337,56 @@ export default class Rola {
       const smoothedVelocity = lerp(entryOptions.previousVelocity ?? velocity, velocity, smoothingFactor);
 
       if (entryOptions.previousProgress !== progress) {
-        (entryOptions.target as HTMLElement).style.setProperty(
-          `${entryOptions.progressCustomPropertyName}`,
-          `${progress}`,
-        );
+        // Apply styles to trigger element
+        if (entryOptions.triggerStyles) {
+          Object.entries(entryOptions.triggerStyles).forEach(([property, styleValue]) => {
+            let computedValue: string;
+            
+            if (typeof styleValue === 'function') {
+              computedValue = styleValue(progress, smoothedVelocity);
+            } else {
+              computedValue = evaluateExpression(styleValue, progress, smoothedVelocity);
+            }
+            
+            entryOptions.triggerElement.style.setProperty(property, computedValue);
+          });
+        }
 
-        if (entryOptions.velocityCustomProperty)
-          (entryOptions.target as HTMLElement).style.setProperty(
-            `${entryOptions.velocityCustomPropertyName}`,
-            `${smoothedVelocity}`,
-          );
+        // Apply styles and properties to target elements
+        entryOptions.targets.forEach(target => {
+          if (entryOptions.progressCustomProperty) {
+            target.element.style.setProperty(
+              `${entryOptions.progressCustomPropertyName}`,
+              `${progress}`,
+            );
+          }
 
-        if (callback) callback(el, Rola.isScrubRunning, entryOptions, progress);
+          if (entryOptions.velocityCustomProperty) {
+            target.element.style.setProperty(
+              `${entryOptions.velocityCustomPropertyName}`,
+              `${smoothedVelocity}`,
+            );
+          }
+
+          // Apply individual target styles
+          if (target.styles) {
+            Object.entries(target.styles).forEach(([property, styleValue]) => {
+              let computedValue: string;
+              
+              if (typeof styleValue === 'function') {
+                computedValue = styleValue(progress, smoothedVelocity);
+              } else {
+                computedValue = evaluateExpression(styleValue, progress, smoothedVelocity);
+              }
+              
+              target.element.style.setProperty(property, computedValue);
+            });
+          }
+        });
+
+        if (callback) {
+          Rola._callCallback(callback, el, Rola.isScrubRunning, entryOptions, progress, smoothedVelocity);
+        }
 
         entryOptions.previousProgress = progress;
         Rola.scrubEntries.set(el, { entryOptions, callback });

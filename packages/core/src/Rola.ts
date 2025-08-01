@@ -27,6 +27,8 @@ export default class Rola {
   private static previousScrubEntryCount = 0;
   private static stopThreshold = 5000;
   private static prefix = "rola";
+  private static reducedMotionMediaQuery: MediaQueryList | null = null;
+  private static prefersReducedMotion = false;
 
   /**
    * Calls callback function with object-style parameters.
@@ -66,11 +68,15 @@ export default class Rola {
       scrub: false,
       velocityCustomProperty: false,
       progressCustomProperty: true,
+      respectReducedMotion: true,
       progressCustomPropertyName: `--${Rola.prefix}-progress`,
       velocityCustomPropertyName: `--${Rola.prefix}-velocity`,
     };
 
     const configs: RolaOptions = Object.assign(defaultOptions, options);
+
+    // Initialize reduced motion detection
+    Rola._initReducedMotionDetection();
 
     const observerKey = Rola.getObserverKey(configs);
 
@@ -197,6 +203,25 @@ export default class Rola {
   }
 
   /**
+   * Initializes reduced motion detection using matchMedia.
+   */
+  private static _initReducedMotionDetection() {
+    if (Rola.reducedMotionMediaQuery) return;
+
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      Rola.reducedMotionMediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      Rola.prefersReducedMotion = Rola.reducedMotionMediaQuery.matches;
+
+      // Listen for changes in reduced motion preference
+      const handleChange = (event: MediaQueryListEvent) => {
+        Rola.prefersReducedMotion = event.matches;
+      };
+
+      Rola.reducedMotionMediaQuery.addEventListener('change', handleChange);
+    }
+  }
+
+  /**
    * Parses options for a given element.
    */
   private static _getEntryOptions(el: HTMLElement, options: RolaOptions): EntryOptions {
@@ -218,6 +243,7 @@ export default class Rola {
       velocityCustomProperty: parseBoolean(el, `data-${Rola.prefix}-velocity`, options.velocityCustomProperty || false),
       progressCustomProperty: parseBoolean(el, `data-${Rola.prefix}-progress-custom-property`, options.progressCustomProperty ?? true),
       triggerStyles: options.styles,
+      respectReducedMotion: options.respectReducedMotion ?? true,
       progressCustomPropertyName: options.progressCustomPropertyName,
       velocityCustomPropertyName: options.velocityCustomPropertyName,
     };
@@ -337,8 +363,11 @@ export default class Rola {
       const smoothedVelocity = lerp(entryOptions.previousVelocity ?? velocity, velocity, smoothingFactor);
 
       if (entryOptions.previousProgress !== progress) {
+        // Skip styles if reduced motion is preferred and respectReducedMotion is enabled
+        const shouldSkipStyles = entryOptions.respectReducedMotion && Rola.prefersReducedMotion;
+
         // Apply styles to trigger element
-        if (entryOptions.triggerStyles) {
+        if (entryOptions.triggerStyles && !shouldSkipStyles) {
           Object.entries(entryOptions.triggerStyles).forEach(([property, styleValue]) => {
             let computedValue: string;
             
@@ -369,7 +398,7 @@ export default class Rola {
           }
 
           // Apply individual target styles
-          if (target.styles) {
+          if (target.styles && !shouldSkipStyles) {
             Object.entries(target.styles).forEach(([property, styleValue]) => {
               let computedValue: string;
               

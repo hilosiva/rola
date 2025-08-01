@@ -11,6 +11,7 @@ export interface RolaOptions extends IntersectionObserverInit {
   scrub: boolean; // Whether to enable scrubbing for the element.
   velocityCustomProperty: boolean; // Whether to enable scrubbing for the element.
   progressCustomProperty: boolean; // Whether to set progress custom property for the element.
+  respectReducedMotion: boolean; // Whether to respect prefers-reduced-motion setting.
   styles?: StylesObject; // Dynamic styles applied to trigger element.
   target?: string | string[] | Element | Element[]; // Target element(s) for backward compatibility.
   targets?: (string | TargetConfig)[]; // Target elements for applying properties and styles.
@@ -50,6 +51,7 @@ export interface EntryOptions {
   velocityCustomProperty: boolean;
   progressCustomProperty: boolean;
   triggerStyles?: StylesObject; // Styles applied to trigger element.
+  respectReducedMotion: boolean; // Whether to respect prefers-reduced-motion setting.
   progressCustomPropertyName: string; // Name of the CSS custom property used for progress.
   velocityCustomPropertyName: string; // Name of the CSS custom property used for previous progress.
 }

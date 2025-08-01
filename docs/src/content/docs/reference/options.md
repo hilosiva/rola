@@ -202,6 +202,31 @@ new Rola("[data-trigger]", {
 
 ---
 
+## respectReducedMotion
+
+- 型：`boolean | undefined`
+- デフォルト: `true`
+
+`true` にすると、ユーザーのシステム設定で「視差効果を減らす」（`prefers-reduced-motion: reduce`）が有効になっている場合、`styles` オプションや `targets` のスタイル適用を自動的にスキップします。
+
+```javascript
+new Rola("[data-trigger]", {
+  scrub: true,
+  respectReducedMotion: true, // デフォルト
+  styles: {
+    transform: (progress) => `translateX(${progress * 100}px)`
+  }
+});
+```
+
+アクセシビリティを考慮し、通常はデフォルトの `true` のままにすることを推奨します。強制的にアニメーションを実行したい場合のみ `false` に設定してください。
+
+:::note
+この設定は `matchMedia` を使用してリアルタイムで監視され、ユーザーがシステム設定を変更した場合も即座に反映されます。
+:::
+
+---
+
 ## velocityCustomPropertyName
 
 - 型：`string | undefined`

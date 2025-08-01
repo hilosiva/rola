@@ -215,6 +215,11 @@ export default class Rola {
       // Listen for changes in reduced motion preference
       const handleChange = (event: MediaQueryListEvent) => {
         Rola.prefersReducedMotion = event.matches;
+        
+        // Clear existing styles when reduced motion is enabled
+        if (event.matches) {
+          Rola._clearAllStyles();
+        }
       };
 
       Rola.reducedMotionMediaQuery.addEventListener('change', handleChange);
@@ -420,6 +425,33 @@ export default class Rola {
         entryOptions.previousProgress = progress;
         Rola.scrubEntries.set(el, { entryOptions, callback });
       }
+    }
+  }
+
+  /**
+   * Clears all applied styles from trigger and target elements.
+   */
+  private static _clearAllStyles() {
+    for (const [el, entryData] of Rola.scrubEntries.entries()) {
+      const { entryOptions } = entryData;
+      
+      if (!entryOptions.respectReducedMotion) continue;
+
+      // Clear trigger element styles
+      if (entryOptions.triggerStyles) {
+        Object.keys(entryOptions.triggerStyles).forEach(property => {
+          entryOptions.triggerElement.style.removeProperty(property);
+        });
+      }
+
+      // Clear target element styles
+      entryOptions.targets.forEach(target => {
+        if (target.styles) {
+          Object.keys(target.styles).forEach(property => {
+            target.element.style.removeProperty(property);
+          });
+        }
+      });
     }
   }
 

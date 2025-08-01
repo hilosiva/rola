@@ -20,7 +20,7 @@ Rolaの詳しい使い方は[ドキュメント](https://hilosiva.github.io/rola
 ### CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.2.1/dist/rola.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.2.2/dist/rola.min.js" defer></script>
 ```
 
 ### NPM
@@ -101,7 +101,7 @@ new Rola("[data-rola-trigger]", {
 });
 ```
 
-### アクセシビリティ対応（v0.2.1）
+### アクセシビリティ対応（v0.2.1+）
 
 `prefers-reduced-motion`メディアクエリに対応し、ユーザーの視差効果軽減設定を自動的に尊重します：
 
@@ -116,6 +116,8 @@ new Rola("[data-rola-trigger]", {
 ```
 
 ユーザーがシステム設定で「視差効果を減らす」を有効にしている場合、stylesの適用が自動的にスキップされます。強制的にアニメーションを実行したい場合は `respectReducedMotion: false` を設定してください。
+
+**v0.2.2の改善:** スクラブ実行中にユーザーが設定を変更した場合、既に適用されているスタイルも自動的にクリアされるようになりました。
 
 
 ## ライセンス

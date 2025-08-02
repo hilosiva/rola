@@ -16,19 +16,19 @@ export const evaluateExpression = (
   try {
     // Replace common patterns like "0.5 * 100" 
     result = result.replace(/(\d*\.?\d+)\s*\*\s*(\d*\.?\d+)/g, (match, a, b) => {
-      return (parseFloat(a) * parseFloat(b)).toString();
+      return (Number.parseFloat(a) * Number.parseFloat(b)).toString();
     });
     
     result = result.replace(/(\d*\.?\d+)\s*\/\s*(\d*\.?\d+)/g, (match, a, b) => {
-      return (parseFloat(a) / parseFloat(b)).toString();
+      return (Number.parseFloat(a) / Number.parseFloat(b)).toString();
     });
     
     result = result.replace(/(\d*\.?\d+)\s*\+\s*(\d*\.?\d+)/g, (match, a, b) => {
-      return (parseFloat(a) + parseFloat(b)).toString();
+      return (Number.parseFloat(a) + Number.parseFloat(b)).toString();
     });
     
     result = result.replace(/(\d*\.?\d+)\s*-\s*(\d*\.?\d+)/g, (match, a, b) => {
-      return (parseFloat(a) - parseFloat(b)).toString();
+      return (Number.parseFloat(a) - Number.parseFloat(b)).toString();
     });
   } catch (error) {
     console.warn('Failed to evaluate expression:', expression, error);

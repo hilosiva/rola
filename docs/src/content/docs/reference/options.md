@@ -94,20 +94,41 @@ new Rola(selector, {
 
 ## styles
 
-- 型：`Record<string, (progress: number, velocity?: number) => string> | undefined`
+- 型：`Record<string, StyleValue | Record<number, Record<string, StyleValue | false>>> | undefined`
 - デフォルト: `undefined`
 
-トリガー要素に直接スタイルを適用できます。関数でprogressとvelocityを受け取り、CSSの値を返します。
+トリガー要素に直接スタイルを適用できます。関数、テンプレート文字列、ブレイクポイント対応が可能です。
 
 ```javascript
 new Rola("[data-trigger]", {
   scrub: true,
+  breakpointType: 'min',
   styles: {
+    // ベーススタイル（全ブレイクポイントに適用）
     transform: (progress) => `translateX(${progress * 100}px)`,
-    opacity: (progress) => `${progress}`
+    opacity: "scale(${progress})", // テンプレート文字列も可能
+    
+    // ブレイクポイント指定（min-width: 768px以上）
+    768: {
+      transform: (progress) => `rotate(${progress * 360}deg)`,
+      opacity: false, // プロパティを削除
+      backgroundColor: (progress) => `rgba(255, 0, 0, ${progress})`
+    },
+    
+    // より大きなブレイクポイント（min-width: 1024px以上）
+    1024: {
+      transform: false, // transformを削除
+      fontSize: (progress) => `${16 + progress * 8}px`
+    }
   }
 });
 ```
+
+**ブレイクポイントの動作:**
+- 数値キーがブレイクポイントとして認識されます
+- `breakpointType: 'min'` の場合、小さいブレイクポイントから順に適用されます
+- `false` を指定するとそのプロパティがstyle属性から削除されます
+- CSSと同様のカスケード方式で上書きされます
 
 :::caution
 スクラブ機能を有効にしておく必要があります。
@@ -140,30 +161,68 @@ HTML属性 `data-rola-target` でも指定できます。
 
 ---
 
+## breakpointType
+
+- 型：`'min' | 'max'`
+- デフォルト: `'min'`
+
+ブレイクポイントの動作タイプを指定します。
+
+- `'min'`: `min-width` メディアクエリを使用（768 → `(min-width: 768px)`）
+- `'max'`: `max-width` メディアクエリを使用（768 → `(max-width: 768px)`）
+
+```javascript
+new Rola("[data-trigger]", {
+  scrub: true,
+  breakpointType: 'min', // デフォルト
+  styles: {
+    transform: "scale(${progress})",
+    768: {
+      transform: (progress) => `rotate(${progress * 360}deg)`
+    }
+  }
+});
+```
+
+---
+
 ## targets
 
-- 型：`(string | { selector: string, styles?: Record<string, (progress: number, velocity?: number) => string> })[] | undefined`
+- 型：`(string | Element | ((trigger: HTMLElement) => Element | Element[] | null) | { selector: string | Element | ((trigger: HTMLElement) => Element | Element[] | null), styles?: Record<string, StyleValue | Record<number, Record<string, StyleValue | false>>> })[] | undefined`
 - デフォルト: `undefined`
 
-複数のターゲット要素に個別のスタイルを適用できます。
+複数のターゲット要素に個別のスタイルを適用できます。セレクター、Element、関数が使用可能です。
 
 ```javascript
 new Rola("[data-trigger]", {
   scrub: true,
   targets: [
+    // 文字列セレクター
+    ".element1",
+    
+    // Element直接指定
+    document.querySelector('.element2'),
+    
+    // 関数セレクター（トリガー要素からの相対指定）
+    (trigger) => trigger.querySelector('.child'),
+    
+    // 設定付き
     {
-      selector: ".element1",
+      selector: (trigger) => trigger.nextElementSibling,
       styles: {
-        transform: (progress) => `translateX(${progress * 100}px)`
+        transform: (progress) => `translateX(${progress * 100}px)`,
+        768: {
+          transform: (progress) => `translateY(${progress * 50}px)`,
+          opacity: false // 768px以上でopacityを削除
+        }
       }
-    },
-    ".element2" // スタイルなしも可
+    }
   ]
 });
 ```
 
 :::note
-`targets` オプションは `target` オプションより優先されます。
+`targets` オプションは `target` オプションより優先されます。関数セレクターを使用することで、同じコンポーネント内の特定の要素のみを対象にできます。
 :::
 
 ---

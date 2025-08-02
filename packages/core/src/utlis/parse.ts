@@ -1,5 +1,5 @@
 // utils/parse.js
-import { Position, TargetConfig, TargetElement } from "../types";
+import { Position, TargetConfig, TargetElement, TargetSelector } from "../types";
 
 /**
  * Parses a position from an element.
@@ -44,7 +44,7 @@ export const parseBoolean = (el: HTMLElement, attr: string, defaultValue: boolea
 export const parseTargets = (
   el: HTMLElement, 
   attr: string, 
-  targetsOption?: (string | TargetConfig)[],
+  targetsOption?: (TargetSelector | TargetConfig)[],
   targetOption?: string | string[] | Element | Element[]
 ): TargetElement[] => {
   // New targets option takes highest priority
@@ -56,9 +56,39 @@ export const parseTargets = (
           element: element as HTMLElement,
           styles: undefined
         }));
+      } else if (target instanceof Element) {
+        // Direct Element reference
+        return [{
+          element: target as HTMLElement,
+          styles: undefined
+        }];
+      } else if (typeof target === 'function') {
+        // Function selector
+        const result = target(el);
+        if (!result) return [];
+        
+        const elements = Array.isArray(result) ? result : [result];
+        return elements.map(element => ({
+          element: element as HTMLElement,
+          styles: undefined
+        }));
       } else {
         // TargetConfig - with individual styles
-        return Array.from(document.querySelectorAll(target.selector)).map(element => ({
+        const selector = target.selector;
+        let elements: Element[] = [];
+        
+        if (typeof selector === 'string') {
+          elements = Array.from(document.querySelectorAll(selector));
+        } else if (selector instanceof Element) {
+          elements = [selector];
+        } else if (typeof selector === 'function') {
+          const result = selector(el);
+          if (result) {
+            elements = Array.isArray(result) ? result : [result];
+          }
+        }
+        
+        return elements.map(element => ({
           element: element as HTMLElement,
           styles: target.styles
         }));

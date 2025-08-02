@@ -1,8 +1,16 @@
 export type StyleValue = string | ((progress: number, velocity?: number) => string);
-export type StylesObject = Record<string, StyleValue>;
+export type ResponsiveStyleValue = StyleValue | false; // false means remove the property
+
+// Simple and flexible styles object
+export type StylesObject = Record<string, StyleValue | false | Record<string, ResponsiveStyleValue>>;
+
+export type TargetSelector = 
+  | string 
+  | Element 
+  | ((triggerElement: HTMLElement) => Element | Element[] | null);
 
 export interface TargetConfig {
-  selector: string;
+  selector: TargetSelector;
   styles?: StylesObject;
 }
 
@@ -12,9 +20,10 @@ export interface RolaOptions extends IntersectionObserverInit {
   velocityCustomProperty: boolean; // Whether to enable scrubbing for the element.
   progressCustomProperty: boolean; // Whether to set progress custom property for the element.
   respectReducedMotion: boolean; // Whether to respect prefers-reduced-motion setting.
+  breakpointType: 'min' | 'max'; // Type of breakpoint detection (min-width or max-width).
   styles?: StylesObject; // Dynamic styles applied to trigger element.
   target?: string | string[] | Element | Element[]; // Target element(s) for backward compatibility.
-  targets?: (string | TargetConfig)[]; // Target elements for applying properties and styles.
+  targets?: (TargetSelector | TargetConfig)[]; // Target elements for applying properties and styles.
   progressCustomPropertyName: string; // Name of the CSS custom property used for progress.
   velocityCustomPropertyName: string; // Name of the CSS custom property used for previous progress.
 }
@@ -52,6 +61,8 @@ export interface EntryOptions {
   progressCustomProperty: boolean;
   triggerStyles?: StylesObject; // Styles applied to trigger element.
   respectReducedMotion: boolean; // Whether to respect prefers-reduced-motion setting.
+  breakpointType: 'min' | 'max'; // Type of breakpoint detection (min-width or max-width).
+  currentBreakpoint: number | null; // Current active breakpoint.
   progressCustomPropertyName: string; // Name of the CSS custom property used for progress.
   velocityCustomPropertyName: string; // Name of the CSS custom property used for previous progress.
 }

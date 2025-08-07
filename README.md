@@ -20,7 +20,7 @@ Rolaの詳しい使い方は[ドキュメント](https://hilosiva.github.io/rola
 ### CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.2.3/dist/rola.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@hilosiva/rola@0.2.4/dist/rola.min.js" defer></script>
 ```
 
 ### NPM

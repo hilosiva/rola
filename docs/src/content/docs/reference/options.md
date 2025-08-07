@@ -67,7 +67,7 @@ new Rola(selector, {
 - 型：`boolean | undefined`
 - デフォルト: `false`
 
-`true` にするとスクラブ機能を有効にすることができ、ターゲット要素に `--rola-progress` カスタムプロパティが付与され進行度が提供されます。
+`true` にするとスクラブ機能を有効にすることができ、ターゲット要素（targetsが指定されていない場合はトリガー要素）に `--rola-progress` カスタムプロパティが付与され進行度が提供されます。
 
 カスタムプロパティ名は [`progressCustomPropertyName`](#progresscustompropertyname) オプションで変更できます。
 

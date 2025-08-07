@@ -564,7 +564,9 @@ export default class Rola {
         }
 
         // Apply styles and properties to target elements
-        for (const target of entryOptions.targets) {
+        const elementsToApply = entryOptions.targets.length > 0 ? entryOptions.targets : [{ element: entryOptions.triggerElement }];
+        
+        for (const target of elementsToApply) {
           if (entryOptions.progressCustomProperty) {
             target.element.style.setProperty(
               `${entryOptions.progressCustomPropertyName}`,

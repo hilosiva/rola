@@ -37,3 +37,6 @@ new Rola(
   }
 );
 new Rola("[data-rola-trigger]", { once: false, rootMargin: "0px 0px -30%" });
+new Rola("[data-rola-scrub]", {
+  scrub: true,
+});
